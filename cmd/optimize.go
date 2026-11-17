@@ -90,6 +90,52 @@ from the router; the command reports the measured state honestly.`,
 		}
 		log.Infof("applied %d settings", len(settings))
 
+		// Network-stack tuning: MSS clamping for the 1400-byte cellular MTU,
+		// larger TCP buffers for the high-BDP LTE path, and a fair queueing
+		// discipline to remove Linux-side head-of-line blocking.
+		fmt.Println()
+		fmt.Println("=== Network stack tuning ===")
+		tuning := []string{
+			"iptables -t mangle -A FORWARD -o wan1 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1360",
+			"echo '4096 131072 4194304' > /proc/sys/net/ipv4/tcp_rmem",
+			"echo '4096 131072 4194304' > /proc/sys/net/ipv4/tcp_wmem",
+			"echo '212992 1048576 4194304' > /proc/sys/net/core/rmem_max",
+			"echo '212992 1048576 4194304' > /proc/sys/net/core/wmem_max",
+			"tc qdisc replace dev wan1 root sfq perturb 10",
+		}
+		for _, t := range tuning {
+			if app.DryRun {
+				log.Infof("would run: %s", t)
+				continue
+			}
+			if _, err := client.Run(t, "# ", 5*time.Second); err != nil {
+				log.WithError(err).Warnf("tuning command failed: %s", t)
+				continue
+			}
+			fmt.Printf("  %s\n", t)
+		}
+
+		// Persist the tunings across reboots through the existing boot hook.
+		marker := "# zlt-unlocker network tuning"
+		check, err := client.Run("grep -c '"+marker+"' /etc/rc", "# ", 4*time.Second)
+		if err == nil && !strings.Contains(check, "1") && !app.DryRun {
+			hook := []string{
+				"echo '' >> /etc/rc",
+				"echo '" + marker + "' >> /etc/rc",
+				"echo 'iptables -t mangle -A FORWARD -o wan1 -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1360' >> /etc/rc",
+				"echo 'echo 4096 131072 4194304 > /proc/sys/net/ipv4/tcp_rmem' >> /etc/rc",
+				"echo 'echo 4096 131072 4194304 > /proc/sys/net/ipv4/tcp_wmem' >> /etc/rc",
+				"echo 'tc qdisc replace dev wan1 root sfq perturb 10' >> /etc/rc",
+			}
+			for _, h := range hook {
+				if _, err := client.Run(h, "# ", 4*time.Second); err != nil {
+					log.WithError(err).Warn("could not persist tuning")
+					break
+				}
+			}
+		}
+		log.Info("network tuning applied and persisted")
+
 		if optimizeReboot {
 			log.Warn("[optimize] rebooting to apply DNS changes")
 			if !app.DryRun {

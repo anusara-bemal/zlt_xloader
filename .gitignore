@@ -1,0 +1,20 @@
+# Binaries
+zlt-unlocker
+zlt-unlocker.exe
+dist/
+
+# Go
+*.test
+*.out
+coverage.txt
+
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local captures and device dumps
+*.bin
+*.pcap
+hits.json

@@ -12,6 +12,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -31,6 +33,7 @@ type Client struct {
 	conn    net.Conn
 	timeout time.Duration
 	mu      sync.Mutex
+	pending []byte // incomplete IAC sequence carried between reads
 }
 
 // Dial connects to a Telnet server.
@@ -55,7 +58,9 @@ func (c *Client) Run(command string, prompt string, timeout time.Duration) (stri
 	defer c.mu.Unlock()
 
 	_ = c.conn.SetDeadline(time.Now().Add(timeout))
-	if _, err := io.WriteString(c.conn, command+"\n"); err != nil {
+	written, err := io.WriteString(c.conn, command+"\n")
+	log.Debugf("[telnet] wrote %d bytes to %s", written, c.conn.RemoteAddr())
+	if err != nil {
 		return "", err
 	}
 
@@ -66,7 +71,9 @@ func (c *Client) Run(command string, prompt string, timeout time.Duration) (stri
 		n, err := c.conn.Read(buf)
 		if n > 0 {
 			lastData = time.Now()
-			out.Write(filterIAC(buf[:n]))
+			chunk := c.filterIAC(buf[:n])
+			log.Debugf("[telnet] raw chunk: %q", chunk)
+			out.Write(chunk)
 			if prompt != "" && strings.Contains(out.String(), prompt) {
 				break
 			}
@@ -97,7 +104,9 @@ func (c *Client) Expect(substr string, timeout time.Duration) (string, error) {
 	for time.Now().Before(deadline) {
 		n, err := c.conn.Read(buf)
 		if n > 0 {
-			out.Write(filterIAC(buf[:n]))
+			chunk := c.filterIAC(buf[:n])
+			log.Debugf("[telnet] expect chunk: %q", chunk)
+			out.Write(chunk)
 			if substr == "" || strings.Contains(out.String(), substr) {
 				return out.String(), nil
 			}
@@ -142,7 +151,7 @@ func (c *Client) Interactive() error {
 		for {
 			n, err := c.conn.Read(buf)
 			if n > 0 {
-				_, _ = os.Stdout.Write(filterIAC(buf[:n]))
+				_, _ = os.Stdout.Write(c.filterIAC(buf[:n]))
 			}
 			if err != nil {
 				break
@@ -155,44 +164,62 @@ func (c *Client) Interactive() error {
 	return nil
 }
 
-// filterIAC removes Telnet negotiation sequences from a byte stream.
-func filterIAC(in []byte) []byte {
-	out := make([]byte, 0, len(in))
-	for i := 0; i < len(in); i++ {
-		if in[i] != iac {
-			if in[i] == cr && i+1 < len(in) && in[i+1] == nul {
+// filterIAC strips Telnet negotiation sequences, answers them, and carries
+// incomplete sequences across reads so a split IAC frame is never lost.
+func (c *Client) filterIAC(in []byte) []byte {
+	data := append(c.pending, in...)
+	c.pending = nil
+	out := make([]byte, 0, len(data))
+
+parse:
+	for i := 0; i < len(data); i++ {
+		if data[i] != iac {
+			if data[i] == cr && i+1 < len(data) && data[i+1] == nul {
 				i++ // discard NUL after CR
 			}
-			out = append(out, in[i])
+			out = append(out, data[i])
 			continue
 		}
-		if i+1 >= len(in) {
+		if i+1 >= len(data) {
+			c.pending = append(c.pending, data[i:]...)
 			break
 		}
-		cmd := in[i+1]
+		cmd := data[i+1]
 		switch cmd {
-		case will, do:
-			// Decline the option. The embedded telnetd tolerates a silent
-			// client; negotiation frames are simply hidden from output.
-			if i+2 < len(in) {
-				i += 2
+		case will:
+			if i+2 >= len(data) {
+				c.pending = append(c.pending, data[i:]...)
+				break parse
 			}
+			_, _ = c.conn.Write([]byte{iac, do, data[i+2]})
+			i += 2
+		case do:
+			if i+2 >= len(data) {
+				c.pending = append(c.pending, data[i:]...)
+				break parse
+			}
+			_, _ = c.conn.Write([]byte{iac, will, data[i+2]})
+			i += 2
 		case wont, dont:
-			if i+2 < len(in) {
-				i += 2
+			if i+2 >= len(data) {
+				c.pending = append(c.pending, data[i:]...)
+				break parse
 			}
+			i += 2
 		case sb:
-			for i+1 < len(in) && !(in[i] == iac && in[i+1] == se) {
-				i++
+			j := i + 2
+			for j+1 < len(data) && !(data[j] == iac && data[j+1] == se) {
+				j++
 			}
-			if i+1 < len(in) {
-				i++
+			if j+1 >= len(data) {
+				c.pending = append(c.pending, data[i:]...)
+				break parse
 			}
+			i = j + 1
 		case iac:
 			out = append(out, iac)
 			i++
 		}
-		// IAC sequences are intentionally dropped from visible output.
 	}
 	return out
 }

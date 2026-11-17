@@ -40,6 +40,7 @@ Standard ZTE tooling (`zteOnu`, `factorymode_crack`, …) does not work on this 
 | `unlock` | Remove the carrier PLMN/band locks over the root shell so any SIM works. |
 | `persist` | Make telnet (23) and SSH (22) start automatically at every boot. |
 | `unhide` | Reveal UI pages/features hidden by the carrier firmware. |
+| `optimize` | Show RF diagnostics and tune DNS / remove data-cap throttling. |
 | `shell` | Interactive root shell over telnet (auto-enables telnet), or run one command / AT command. |
 | `status` | Device, SIM, lock, signal and NVRAM status. |
 | `power` | Reboot or power off the router. |
@@ -202,6 +203,20 @@ etc.) are present even when the pages are hidden.
 
 Note: `config.js` on this build has `HAS_USSD:false`, so the USSD page may not
 render even after the flags are enabled; the API itself still responds.
+
+### 2c-4. Connection optimization
+
+```bash
+./zlt-unlocker --dry-run=false --yes optimize --reboot
+```
+
+Prints live RF diagnostics (band, bandwidth, RSRP/RSRQ/SINR, PCI, SIM PLMN)
+and applies what the router actually controls: DNS 1.1.1.1 / 8.8.8.8,
+data-volume cap and quota alerts off, QoS off, and no band lock.
+
+Carrier-core latency (CGNAT / roaming) cannot be changed from the router. On
+this device the RF link was already healthy (Band 3, 20 MHz, SINR ~19 dB),
+so remaining latency is in the operator's network, not the air interface.
 
 ### 2d. Shell, status, power, SMS, USSD and file export
 

@@ -9,7 +9,7 @@ website/
   index.html          full single-page product site
   styles.css          design system + all sections
   script.js           command catalogue, filters, tabs, copy buttons, nav
-  assets/             favicon.svg (single mark), real CLI capture, device cutout, OG card
+  assets/             favicon.svg (single logo/mark used by site and meta), real CLI capture, device cutout
   content/            documentation source (.mdx, carried over from the repo docs)
   docs/               generated static documentation pages (committed)
   tools/nav.mjs       one shared header definition for home and docs

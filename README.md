@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/logo.png" alt="zlt_xloader logo" width="92" />
+<img src="website/assets/favicon.svg" alt="zlt_xloader logo" width="92" />
 
 <h1>zlt_xloader</h1>
 

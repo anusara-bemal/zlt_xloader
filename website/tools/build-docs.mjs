@@ -219,7 +219,7 @@ function parseFrontmatter(source) {
 
 function pageShell(title, description, canonical, body, depth) {
   const prefix = depth === 'docs' ? '../' : '';
-  const ogImage = `${SITE}/assets/og.png`;
+  const ogImage = `${SITE}/assets/favicon.svg`;
   const fullTitle = `${title} — zlt_xloader docs`;
   const crumbs = [
     { '@type': 'ListItem', position: 1, name: 'zlt_xloader', item: `${SITE}/` },
@@ -272,6 +272,8 @@ function pageShell(title, description, canonical, body, depth) {
   <meta property="og:description" content="${escapeAttr(description)}">
   <meta property="og:url" content="${escapeAttr(canonical)}">
   <meta property="og:image" content="${escapeAttr(ogImage)}">
+  <meta property="og:image:alt" content="zlt_xloader logo">
+  <meta property="og:image:type" content="image/svg+xml">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeAttr(fullTitle)}">
   <meta name="twitter:description" content="${escapeAttr(description)}">

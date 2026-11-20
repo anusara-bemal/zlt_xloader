@@ -1,0 +1,72 @@
+---
+title: Unlock & optimise
+description: unlock, unhide and optimize — removing carrier-imposed restrictions and tuning the connection.
+order: 12
+section: Command reference
+label: Unlock & optimise
+updated: "2026-11-20"
+---
+
+import Command from '../../components/Command.astro';
+import Callout from '../../components/Callout.astro';
+
+<Command
+  name="unlock"
+  tag="mutating"
+  syntax="./zlt_xloader --dry-run=false --yes unlock --reboot"
+  flags={[{ flag: '--reboot', description: 'Reboot after clearing the lock state.' }]}
+>
+  <p>
+    Uses the same <code>REMOVE_WHITE_SITE</code> injection as <code>telnet</code> to run
+    <code>nv set</code> commands as root. It clears <code>tz_lock_plmn_state</code>,
+    <code>tz_lock_plmn_list</code>, <code>tz_lock_band_state</code>,
+    <code>tz_lock_3G_band_state</code>, <code>tz_lock_imsi_state</code>,
+    <code>use_lock_net</code> and <code>tz_lock_sim</code>, then runs <code>nv save</code>
+    and patches the default parameter files so the change survives a factory reset.
+  </p>
+  <p>
+    A backup of the original NVRAM is written to
+    <code>/tmp/zlt_xloader-nv-backup.txt</code> on the router. Verify with
+    <code>nv get tz_lock_plmn_state</code> over a shell — it should print <code>no</code>.
+  </p>
+</Command>
+
+<Command
+  name="unhide"
+  tag="mutating"
+  syntax="./zlt_xloader --dry-run=false --yes unhide --reboot"
+  flags={[{ flag: '--reboot', description: 'Reboot so the web UI reflects the new flags.' }]}
+>
+  <p>
+    The SLT/Dialog firmware hides pages with three NVRAM bitfields:
+    <code>tz_web_page_hide</code>, <code>tz_web_user_hide</code> and
+    <code>tz_web_special_func</code>, plus feature flags such as
+    <code>need_support_sms</code> and <code>need_support_ussd</code>. This command clears
+    the hide bits and enables the flags so SMS, network selection, APN and other pages
+    appear in the web UI. The backend endpoints are present even while the pages are hidden.
+  </p>
+</Command>
+
+<Callout type="note" title="Firmware quirk">
+  <code>config.js</code> on the S20_1.12.7 build has <code>HAS_USSD:false</code>, so the
+  USSD page may not render even after the flags are enabled. The API itself still responds.
+</Callout>
+
+<Command
+  name="optimize"
+  tag="mutating"
+  syntax="./zlt_xloader --dry-run=false --yes optimize --reboot"
+  flags={[{ flag: '--reboot', description: 'Reboot after applying the settings.' }]}
+>
+  <p>
+    Prints live RF diagnostics — band, bandwidth, RSRP/RSRQ/SINR, PCI and SIM PLMN — then
+    applies what the router actually controls: DNS 1.1.1.1 / 8.8.8.8, data-volume cap and
+    quota alerts off, QoS off, and no band lock.
+  </p>
+</Command>
+
+<Callout type="warn" title="Limits of optimisation">
+  Carrier-core latency from CGNAT or roaming cannot be changed from the router. On the
+  reference device the RF link was already healthy (Band 3, 20 MHz, SINR around 19 dB),
+  so remaining latency was in the operator's network rather than the air interface.
+</Callout>

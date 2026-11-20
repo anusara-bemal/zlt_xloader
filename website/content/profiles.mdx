@@ -1,0 +1,77 @@
+---
+title: Device profiles
+description: Edit the JSON profile to match a packet capture without recompiling the binary.
+order: 20
+section: Guides
+updated: "2026-11-20"
+---
+
+import Callout from '../../components/Callout.astro';
+
+A profile is a JSON file that holds every device-specific constant: endpoint paths, login parameters, payload IDs, fuzz inputs, serial settings, crypto hints and unlock keys. This keeps the Go binary generic and makes field corrections fast.
+
+## Selecting a profile
+
+```bash
+# Built-in default: S20_1.12.7 (Dialog / SLT-Mobitel)
+./zlt_xloader scan
+
+# Alternate shipped profiles
+./zlt_xloader --profile ./profiles/zlt_m910w_1.13.6_mtn.json scan
+./zlt_xloader --profile ./profiles/zlt_s20_1.02.7_org.json status
+```
+
+The MTN and ORG profiles carry their own fingerprint commands, payload sets and unlock parameters, so `unlock` uses the correct NVRAM and AT keys for those firmware variants.
+
+## Copy and edit
+
+Copy `profiles/zlt_s20_1.12.7.json`, give it a new name, and pass it with `--profile`. Useful fields:
+
+```jsonc
+{
+  "endpoints": {
+    "post_path": "/reqproc/proc_post",
+    "get_cmd_path": "/reqproc/proc_get",
+    "get_token_cmd": "get_token",
+    "get_random_login_cmd": "get_random_login",
+    "csrf_token_header": "CSRFToken"
+  },
+  "login": { "username": "admin", "password": "admin" },
+  "payloads": [ /* add goformIds observed in your packet capture */ ],
+  "fuzz": {
+    "keywords": ["plmn", "lock", "sim", "unlock", "nv_write"],
+    "goform_ids": ["TZ_UNLOCK_PLMN", "UNLOCK_NETWORK", "..."],
+    "values": ["0", "1", "false", "true", "y", "n"],
+    "max_requests": 400
+  },
+  "uart": { "port": "COM3", "baud": 115200 },
+  "crypto": { "known_keys": [ /* keys found in firmware */ ] },
+  "unlock": {
+    "backup_path": "/tmp/zlt_xloader-nv-backup.txt",
+    "save": true,
+    "nv": [
+      {
+        "key": "tz_lock_plmn_state",
+        "value": "no",
+        "path": "/etc_ro/default/default_parameter_sys"
+      }
+    ],
+    "at": [{ "key": "tz_lock_plmn_state", "value": "no", "path": "" }]
+  }
+}
+```
+
+## Capture, mirror, verify
+
+1. Capture a real login/session with a MITM proxy or browser developer tools.
+2. Mirror the exact parameter names, IDs and request order into the profile.
+3. Run `scan` and `status` to confirm fingerprinting still works.
+4. Run the mutating command with dry-run enabled and check the printed plan before applying it.
+
+<Callout type="warn" title="Never commit personal data">
+  Captures often contain IMEIs, serial numbers, phone numbers and session tokens. Strip those values before contributing a profile correction.
+</Callout>
+
+## Verified versus reported
+
+The built-in corpus is split into **verified** IDs recovered from the firmware's `service.js` and **reported** IDs supplied from black-box testing. Verified entries are trustworthy on the matching firmware build; reported entries may be ignored by other builds. Profile corrections that turn a reported entry into a verified one are especially welcome.

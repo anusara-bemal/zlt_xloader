@@ -93,7 +93,7 @@ a factory reset. Nothing is sent unless --dry-run=false.`,
 		}
 
 		if unlockReboot {
-			log.Warn("[unlock] rebooting router; telnet will need to be re-enabled with 'zlt-unlocker telnet'")
+			log.Warn("[unlock] rebooting router; telnet will need to be re-enabled with 'zlt_xloader telnet'")
 			runUnlockCommand("reboot", "reboot")
 		}
 

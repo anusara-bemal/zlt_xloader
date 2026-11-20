@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Installation — zlt_xloader docs</title>
+  <meta name="description" content="Download a signed release archive, build from source, or cross-compile the full platform matrix.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="theme-color" content="#f4f1ea">
+  <link rel="canonical" href="https://anusara-bemal.github.io/docs/installation.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="zlt_xloader">
+  <meta property="og:title" content="Installation — zlt_xloader docs">
+  <meta property="og:description" content="Download a signed release archive, build from source, or cross-compile the full platform matrix.">
+  <meta property="og:url" content="https://anusara-bemal.github.io/docs/installation.html">
+  <meta property="og:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Installation — zlt_xloader docs">
+  <meta name="twitter:description" content="Download a signed release archive, build from source, or cross-compile the full platform matrix.">
+  <meta name="twitter:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","name":"zlt_xloader","description":"Security research and device ownership toolkit for the Tozed ZLT S20 4G router.","applicationCategory":"SecurityApplication","operatingSystem":"Windows, Linux, macOS","programmingLanguage":"Go","codeRepository":"https://github.com/anusara-bemal/zlt_xloader","url":"https://anusara-bemal.github.io/","author":{"@type":"Person","name":"anusara-bemal"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"zlt_xloader","item":"https://anusara-bemal.github.io/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://anusara-bemal.github.io/docs/"},{"@type":"ListItem","position":3,"name":"Installation","item":"https://anusara-bemal.github.io/docs/installation.html"}]}]}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-head">
+    <div class="container head-inner">
+      <a class="brand" href="../index.html" aria-label="zlt_xloader home">
+        <img src="../assets/favicon.svg" alt="" width="26" height="26">
+        <span class="brand-name">zlt_xloader</span>
+        <span class="brand-ver">FIELD MANUAL / 1.0</span>
+      </a>
+
+      <nav aria-label="Primary">
+        <ul class="nav">
+          <li><a href="../index.html#paths">Access paths</a></li>
+          <li><a href="../index.html#gate">Write gate</a></li>
+          <li><a href="../index.html#variants">Variants</a></li>
+          <li><a href="../index.html#setup">Setup</a></li>
+          <li><a href="../index.html#commands">Commands</a></li>
+          <li><a href="index.html" aria-current="page">Docs ↗</a></li>
+        </ul>
+      </nav>
+
+      <div class="head-end">
+        <a class="head-link" href="https://github.com/anusara-bemal/zlt_xloader" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href="../index.html#setup">Get the binary</a>
+        <button id="menu-btn" class="menu-btn" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobile-nav">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
+      <ul>
+        <li><a href="../index.html#paths">Access paths</a></li>
+        <li><a href="../index.html#gate">Write gate</a></li>
+        <li><a href="../index.html#variants">Variants</a></li>
+        <li><a href="../index.html#setup">Setup</a></li>
+        <li><a href="../index.html#commands">Commands</a></li>
+        <li><a href="../index.html#safety">Safety &amp; legal</a></li>
+        <li><a href="index.html">Documentation ↗</a></li>
+      </ul>
+    </nav>
+  </header>
+<main id="main"><div class="container doc-shell">
+    <aside class="doc-sidebar" aria-label="Documentation navigation"><div class="doc-sidebar-group"><div class="doc-sidebar-label">Getting started</div><ul><li><a href="introduction.html">Introduction</a></li><li><a href="disclaimer.html">Disclaimer &amp; safety model</a></li><li><a href="installation.html" aria-current="page">Installation</a></li><li><a href="quickstart.html">Quickstart</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Command reference</div><ul><li><a href="commands-recon.html">Recon</a></li><li><a href="commands-access.html">Access &amp; shell</a></li><li><a href="commands-unlock.html">Unlock &amp; optimise</a></li><li><a href="commands-advanced.html">Advanced</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Guides</div><ul><li><a href="profiles.html">Device profiles</a></li><li><a href="how-it-works.html">How it works</a></li><li><a href="hardware.html">Hardware notes</a></li><li><a href="faq.html">FAQ</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Project</div><ul><li><a href="contributing.html">Contributing</a></li><li><a href="changelog.html">Changelog</a></li></ul></div></aside>
+    <article class="doc-main">
+      <h1>Installation</h1>
+      <p class="doc-lead">Download a signed release archive, build from source, or cross-compile the full platform matrix.</p>
+      <div class="prose"><p>The shipped binary is named <code>zlt_xloader</code>. The Go module path is <code>github.com/anusara-bemal/zlt_xloader</code>, matching the repository.</p>
+<h2 id="from-a-release">From a release</h2>
+<p>Pre-built, checksummed archives for Linux, Windows and macOS are published on the <a href="https://github.com/anusara-bemal/zlt_xloader/releases">Releases page</a>.</p>
+<ol><li>Download the archive for your platform and architecture.</li><li>Verify it against the published <code>checksums.txt</code>.</li><li>Extract it and run the <code>zlt_xloader</code> binary inside.</li></ol>
+<pre><code class="language-bash"># Example on Linux or macOS
+sha256sum zlt_xloader_linux_amd64.tar.gz
+# compare with the matching line in checksums.txt
+tar -xzf zlt_xloader_linux_amd64.tar.gz
+./zlt_xloader version</code></pre>
+<div class="doc-callout doc-callout--warn"><strong>Verify the checksum</strong><p>A checksum file proves the archive you downloaded matches the one that was published. Get the checksum file from the same release page, not from a link in a message or forum post.</p></div>
+<h2 id="from-source">From source</h2>
+<p>Requires Go 1.22 or newer.</p>
+<pre><code class="language-bash">git clone https://github.com/anusara-bemal/zlt_xloader.git
+cd zlt_xloader
+go build -o zlt_xloader .
+./zlt_xloader version</code></pre>
+<h2 id="cross-compile-with-the-makefile">Cross-compile with the Makefile</h2>
+<pre><code class="language-bash">make build-all VERSION=v1.0.0
+# artifacts land in dist/{windows,linux,macos}/</code></pre>
+<p>Supported targets:</p>
+<table><thead><tr><th>OS</th><th>Architectures</th></tr></thead><tbody><tr><td>Windows</td><td>amd64, 386</td></tr>
+<tr><td>Linux</td><td>amd64, arm64, armv7</td></tr>
+<tr><td>macOS</td><td>amd64, arm64</td></tr></tbody></table>
+<p>Other useful targets:</p>
+<pre><code class="language-bash">make check     # format, vet and test
+make cover     # coverage report
+make snapshot  # local GoReleaser snapshot</code></pre>
+<h2 id="verify-the-install">Verify the install</h2>
+<pre><code class="language-bash">./zlt_xloader version
+./zlt_xloader --help</code></pre>
+<p><code>version</code> reports the version, commit and build date, injected at build time. If both commands run, the binary is ready — continue to <a href="quickstart.html">Quickstart</a>.</p>
+<h2 id="platform-notes">Platform notes</h2>
+<p>On Windows with Git Bash / MSYS, Unix-style arguments such as <code>/etc_ro/...</code> are converted into Windows paths. Prefix commands that use <code>--remote</code> with <code>MSYS_NO_PATHCONV=1</code>.</p></div>
+      <p class="hint-inline">Last reviewed: 2026-11-20</p>
+      <nav class="doc-pager" aria-label="Documentation pages"><a href="disclaimer.html"><span>← Previous</span><strong>Disclaimer &amp; safety model</strong></a><a href="quickstart.html"><span>Next →</span><strong>Quickstart</strong></a></nav>
+    </article>
+    <aside class="doc-toc" aria-label="On this page"><div class="doc-toc-label">On this page</div><nav><ul><li class="depth-2"><a href="#from-a-release">From a release</a></li><li class="depth-2"><a href="#from-source">From source</a></li><li class="depth-2"><a href="#cross-compile-with-the-makefile">Cross-compile with the Makefile</a></li><li class="depth-2"><a href="#verify-the-install">Verify the install</a></li><li class="depth-2"><a href="#platform-notes">Platform notes</a></li></ul></nav></aside>
+  </div></main>
+  <footer class="site-foot">
+    <div class="container foot-grid">
+      <div>
+        <a class="brand" href="../index.html"><img src="../assets/favicon.svg" alt="" width="26" height="26"><span class="brand-name">zlt_xloader</span></a>
+        <p>Security research and device ownership for the Tozed ZLT S20. For lawful use on hardware you own.</p>
+      </div>
+      <div class="foot-col"><h5>Docs</h5><ul><li><a href="index.html">Index</a></li><li><a href="disclaimer.html">Disclaimer</a></li><li><a href="quickstart.html">Quickstart</a></li></ul></div>
+      <div class="foot-col"><h5>Project</h5><ul><li><a href="../index.html#paths">Features</a></li><li><a href="changelog.html">Changelog</a></li><li><a href="contributing.html">Contributing</a></li></ul></div>
+      <div class="foot-col"><h5>Reference</h5><ul><li><a href="how-it-works.html">How it works</a></li><li><a href="hardware.html">Hardware notes</a></li><li><a href="faq.html">FAQ</a></li></ul></div>
+    </div>
+    <div class="container foot-bottom"><div>Copyright © 2026 anusara-bemal. All rights reserved.</div><div>Educational use only — do not misuse.</div></div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

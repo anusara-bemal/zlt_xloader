@@ -11,7 +11,7 @@ import (
 	"github.com/anusara-bemal/zlt_xloader/pkg/safety"
 )
 
-const persistMarker = "# zlt-unlocker persistent services"
+const persistMarker = "# zlt_xloader persistent services"
 
 var persistReboot bool
 

@@ -51,7 +51,7 @@
     "known_keys": ["0000000000000000", "Tozed", "ZLT", "M910W", "S20-ORG", "orange"]
   },
   "unlock": {
-    "backup_path": "/tmp/zlt-unlocker-nv-backup.txt",
+    "backup_path": "/tmp/zlt_xloader-nv-backup.txt",
     "save": true,
     "nv": [
       { "key": "orange_plmn_lock", "value": "0", "path": "/etc_ro/default/default_parameter_sys" },

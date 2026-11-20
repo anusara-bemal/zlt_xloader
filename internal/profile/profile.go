@@ -227,7 +227,7 @@ func (p *Profile) applyDefaults() {
 		p.UART.Parity = "N"
 	}
 	if p.Unlock.BackupPath == "" {
-		p.Unlock.BackupPath = "/tmp/zlt-unlocker-nv-backup.txt"
+		p.Unlock.BackupPath = "/tmp/zlt_xloader-nv-backup.txt"
 	}
 }
 

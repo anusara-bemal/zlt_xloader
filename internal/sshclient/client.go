@@ -1,5 +1,5 @@
 // Package sshclient provides an SSH transport for the router shell. It is the
-// SSH counterpart of internal/telnet and is used by `zlt-unlocker shell --ssh`.
+// SSH counterpart of internal/telnet and is used by `zlt_xloader shell --ssh`.
 package sshclient
 
 import (

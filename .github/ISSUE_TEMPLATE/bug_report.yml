@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a reproducible problem with zlt-unlocker
+description: Report a reproducible problem with zlt_xloader
 title: "[Bug]: "
 labels: ["bug"]
 body:
@@ -20,7 +20,7 @@ body:
     id: version
     attributes:
       label: Version
-      description: Output of `zlt-unlocker version`
+      description: Output of `zlt_xloader version`
     validations:
       required: true
   - type: input

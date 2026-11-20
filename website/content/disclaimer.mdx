@@ -1,0 +1,60 @@
+---
+title: Disclaimer & safety model
+description: Legal and hardware boundaries, and the safeguards built into every mutating command.
+order: 2
+section: Getting started
+updated: "2026-11-20"
+---
+
+import Callout from '../../components/Callout.astro';
+
+<Callout type="danger" title="Educational purposes only — do not misuse">
+  This project was created for learning and lawful security research on devices you own or are explicitly authorised to test. Do not use it for unauthorised access to, or modification of, any device or network you do not own. Misuse is prohibited and may be illegal.
+</Callout>
+
+Read the terms below before running any command. By using the tool you accept them.
+
+## Terms of use
+
+- Only use this on hardware you own, or on a device you have explicit, written permission to test.
+- Unlocking a carrier or SIM lock may breach your service contract or local law. Check your jurisdiction before proceeding.
+- Modifying router firmware can **permanently brick the device** and will almost certainly void the warranty.
+- Port 23 (telnet) and 8080 are closed by default. Enabling them, writing NVRAM, or pushing a TR-069 `Download` RPC can render the router unusable.
+- **There is no warranty.** You are solely responsible for any damage, data loss or legal consequence. The authors and contributors are not liable for misuse.
+
+## The safety model
+
+The tool is built so that the dangerous path is never the default path.
+
+### Dry-run by default
+
+Every mutating action runs with `--dry-run=true`. In this mode the tool computes the exact commands or RPCs it would send and prints them, but does not write to the device. You must explicitly pass `--dry-run=false` to apply a change.
+
+```bash
+# Shows what would happen — nothing is written
+./zlt_xloader unlock
+
+# Actually applies the change
+./zlt_xloader --dry-run=false --yes unlock --reboot
+```
+
+### Interactive confirmation
+
+Destructive TR-069 RPCs and UART/NVRAM writes additionally require confirmation. Either answer the interactive prompt or pass `--yes` when you are certain.
+
+### Backups before changes
+
+- `unlock` writes the original NVRAM to `/tmp/zlt_xloader-nv-backup.txt` on the router.
+- `persist` copies the boot script to `/etc/rc.zlt-backup` before appending to it.
+
+### Editable profiles
+
+Endpoint names, `goformId` values, token salts and AT commands live in a JSON profile. If you capture traffic and discover a correct value, you can fix it in the profile without recompiling. See [Device profiles](/docs/profiles/).
+
+<Callout type="warn" title="Known firmware caveat">
+  Entries labelled "reported" in a profile come from black-box testing and may not work on every firmware build. Verify against your own device before treating a result as reliable.
+</Callout>
+
+## Responsible disclosure
+
+Do not open a public issue for a security vulnerability. Follow `SECURITY.md` in the repository so the maintainers can assess and address it privately.

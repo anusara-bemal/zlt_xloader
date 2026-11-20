@@ -1,0 +1,132 @@
+---
+title: Advanced commands
+description: api-exploit, tr069-exploit, uart-at, config-decrypt, SMS, USSD and power controls.
+order: 13
+section: Command reference
+label: Advanced
+updated: "2026-11-20"
+---
+
+import Command from '../../components/Command.astro';
+import Callout from '../../components/Callout.astro';
+
+<Command
+  name="api-exploit"
+  tag="research"
+  syntax="./zlt_xloader --dry-run=false --yes api-exploit --fuzz --fuzz-max 300 --workers 8"
+  flags={[
+    { flag: '--username / --password', description: 'Web UI credentials (default admin/admin).' },
+    { flag: '--output', description: 'Write detected hits to a JSON file.' },
+    { flag: '--include-builtin', description: 'Merge the verified corpus from service.js.' },
+    { flag: '--rate', description: 'Per-worker delay, for example 50ms.' },
+    { flag: '--fuzz / --fuzz-only', description: 'Generate additional goformId candidates.' },
+    { flag: '--fuzz-max', description: 'Bound the number of generated requests.' },
+    { flag: '--fuzz-keywords', description: 'Comma-separated keyword list for the generator.' },
+    { flag: '--workers', description: 'Concurrent worker count (default 16, capped at 256).' },
+    { flag: '--token-sequence', description: 'Use the older set_random/get_random/set_token experiment.' },
+  ]}
+>
+  <p>
+    Performs the exact <code>S20_1.12.7</code> login sequence, runs a concurrent
+    <code>goformId</code> sweep and optionally fuzzes unlock-related parameter names.
+    Every response that is not <code>{'{"result":"failure"}'}</code> is reported as a hit,
+    including unexpected HTML or error bodies — these often reveal undocumented endpoints.
+  </p>
+  <p>
+    All POSTs go to <code>/reqproc/proc_post</code> as form data; reads use
+    <code>/reqproc/proc_get</code>. The <code>CSRFToken</code> is sent in the form body and
+    as a header, exactly as <code>service.js</code> does.
+  </p>
+</Command>
+
+<Callout type="danger" title="Fuzzing can brick the device">
+  Generated payloads may write NVRAM. Keep dry-run active while exploring, and only enable
+  it on hardware you can afford to lose.
+</Callout>
+
+<Command
+  name="tr069-exploit"
+  tag="research"
+  syntax="./zlt_xloader --dry-run=false --yes tr069-exploit --set-acs --rpc set-params --param InternetGatewayDevice.ManagementServer.URL --value http://192.168.1.2:7547/acs"
+  flags={[
+    { flag: '--rpc', description: 'RPC to push: set-params, download or reboot.' },
+    { flag: '--param / --value', description: 'Parameter name and value for set-params.' },
+    { flag: '--serve-file', description: 'Local file to serve for a Download RPC.' },
+    { flag: '--set-acs', description: 'Push the local ACS URL with setTR069Config and restart TR-069.' },
+  ]}
+>
+  <p>
+    A local ACS simulator. The router is pointed at your machine, sends a SOAP
+    <code>Inform</code>, and the tool replies with an <code>InformResponse</code>. On the
+    next CPE request it pushes a <code>SetParameterValues</code>, <code>Download</code> or
+    <code>Reboot</code> RPC. SOAP envelopes use the correct CWMP namespaces and XML escaping.
+  </p>
+  <p>
+    The stock ACS is <code>acs.slt.lk</code>, which means the device can be managed
+    remotely. <code>--set-acs</code> changes that URL from the local machine.
+  </p>
+</Command>
+
+<Command
+  name="uart-at"
+  tag="hardware"
+  syntax="./zlt_xloader uart-at --port COM3 --script"
+  flags={[
+    { flag: '--list', description: 'List available serial ports.' },
+    { flag: '--port', description: 'Serial port to open.' },
+    { flag: '--script', description: 'Preview the scripted AT sequence without opening the port.' },
+    { flag: '--simulate', description: 'Run against an in-memory mock serial device.' },
+    { flag: '--command / --expect', description: 'Send one raw command and check for an expected reply.' },
+  ]}
+>
+  <p>
+    Serial/UART interface for raw AT commands such as <code>AT^NVW</code> and
+    <code>AT+CLCK="PN",0</code>. The engine uses send/expect semantics with timeouts and
+    needs physical access, but does not depend on the locked web API.
+  </p>
+</Command>
+
+<Callout type="danger" title="3.3V TTL only">
+  The router's serial header uses 3.3V TTL logic. Do not connect an RS232 adapter
+  (plus or minus 12V) — it will destroy the board. Pinouts vary by board revision, so
+  trace them before probing. See [Hardware notes](/docs/hardware/).
+</Callout>
+
+<Command
+  name="config-decrypt"
+  tag="offline"
+  syntax="./zlt_xloader config-decrypt --file ./config.bin --top 10 --serial <SERIAL> --imei <IMEI>"
+  flags={[
+    { flag: '--file', description: 'Path to the config.bin container.' },
+    { flag: '--top', description: 'Number of candidate keys to report.' },
+    { flag: '--serial / --imei', description: 'Device identifiers used as key material.' },
+    { flag: '--key / --algo', description: 'Decrypt with a known key and algorithm.' },
+    { flag: '--out', description: 'Output file for decrypted data.' },
+  ]}
+>
+  <p>
+    Parses <code>config.bin</code> as a container with a header, payload and trailing
+    signature. A per-block Shannon-entropy report separates structured data from
+    encrypted or compressed regions. Candidate keys are derived from profile constants,
+    the device serial and IMEI, then tried against common embedded algorithms
+    (<code>xor</code>, <code>xor-add</code>, AES-CBC, DES-CBC) with a zero IV. Results are
+    ranked by an entropy/printability score.
+  </p>
+</Command>
+
+## Messaging and power
+
+```bash
+# SMS
+./zlt_xloader --dry-run=false sms list
+./zlt_xloader --dry-run=false sms send --to 0771234567 --message "hello"
+
+# USSD
+./zlt_xloader --dry-run=false ussd --code '*#123#'
+
+# Power (destructive — confirmation required)
+./zlt_xloader --dry-run=false --yes power reboot
+./zlt_xloader --dry-run=false --yes power off
+```
+
+`sms` lists stored messages or sends one. `ussd` sends a USSD code and reads the response. `power` reboots or powers off the device and requires explicit confirmation.

@@ -1,0 +1,95 @@
+---
+title: Access commands
+description: telnet, shell, persist and download — obtaining and keeping a root shell, and moving files.
+order: 11
+section: Command reference
+label: Access & shell
+updated: "2026-11-20"
+---
+
+import Command from '../../components/Command.astro';
+import Callout from '../../components/Callout.astro';
+
+<Command
+  name="telnet"
+  tag="mutating"
+  syntax="./zlt_xloader --dry-run=false telnet"
+>
+  <p>
+    Tries the known telnet/ADB payloads in order and verifies port 23. The working method
+    is a command injection in the <code>ids</code> field of the <code>REMOVE_WHITE_SITE</code>
+    goform, which runs <code>/bin/busybox telnetd -l /bin/sh</code> on the router.
+    <code>TZ_CMD_SECURE_LOGIN</code> is kept as a fallback.
+  </p>
+  <p>
+    The firmware's <code>sha256()</code> returns a hex string that is then Base64-encoded,
+    and every command needs <code>isTest=false</code>. Both are handled automatically.
+  </p>
+</Command>
+
+<Callout type="note" title="Runtime only">
+  The <code>telnetd</code> started by this command does not survive a reboot. Use
+  <code>persist</code> or rerun the command after restarting the router.
+</Callout>
+
+<Command
+  name="shell"
+  tag="interactive"
+  syntax="./zlt_xloader shell"
+  flags={[
+    { flag: '--ssh', description: 'Use SSH instead of telnet (credentials from the active profile).' },
+    { flag: '--user / --password', description: 'Override SSH credentials.' },
+    { flag: '--command', description: 'Run one command instead of opening a session.' },
+    { flag: '--at', description: 'Send the command as a raw AT command via /bin/at_cmd.' },
+  ]}
+>
+  <p>
+    Interactive root shell over telnet or SSH. Telnet is enabled automatically if the port
+    is closed. The client handles Telnet IAC negotiation.
+  </p>
+</Command>
+
+```bash
+./zlt_xloader shell --command "nv get sim_plmn"
+./zlt_xloader shell --at --command "AT+CSQ"
+./zlt_xloader --target 192.168.1.1 shell --ssh
+```
+
+<Command
+  name="persist"
+  tag="mutating"
+  syntax="./zlt_xloader --dry-run=false --yes persist --reboot"
+  flags={[{ flag: '--reboot', description: 'Reboot the router after applying the change.' }]}
+>
+  <p>
+    Appends a small block to <code>/etc/rc</code> so BusyBox telnetd (23) and dropbear (22)
+    start at every boot, and sets the firmware's <code>telnetd_enable</code>,
+    <code>adbd_enable</code> and <code>dropbear_enable</code> NVRAM flags. The original boot
+    script is backed up to <code>/etc/rc.zlt-backup</code>. The command is idempotent.
+  </p>
+  <p>
+    On this firmware, ADB binds only <code>127.0.0.1:5037</code> (host mode) and needs USB;
+    network ADB on 5555 is not available without additional firmware support.
+  </p>
+</Command>
+
+<Command
+  name="download"
+  tag="mutating"
+  syntax="./zlt_xloader --dry-run=false --yes download --remote /etc_ro/default/default_parameter_sys --local ./config.txt"
+  flags={[
+    { flag: '--remote', description: 'Path of the file on the router.' },
+    { flag: '--local', description: 'Destination path on this machine.' },
+  ]}
+>
+  <p>
+    Exports a file from the router through a local HTTP endpoint: the tool starts a local
+    server and runs <code>curl -T</code> from the router shell. The same approach is used
+    by the reference project.
+  </p>
+</Command>
+
+<Callout type="warn" title="Windows / Git Bash">
+  MSYS converts Unix-style arguments such as <code>/etc_ro/...</code> into Windows paths.
+  Prefix the command with <code>MSYS_NO_PATHCONV=1</code> when using <code>--remote</code>.
+</Callout>

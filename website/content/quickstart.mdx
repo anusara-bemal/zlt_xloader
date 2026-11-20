@@ -1,0 +1,82 @@
+---
+title: Quickstart
+description: A safe first session — fingerprint the router, inspect state, and preview a change before applying it.
+order: 4
+section: Getting started
+updated: "2026-11-20"
+---
+
+import Callout from '../../components/Callout.astro';
+
+<Callout type="note" title="Before you begin">
+  Connect the router to your machine and make sure you can reach its web UI. Everything below is read-only until the final, clearly marked step. Use a device you own.
+</Callout>
+
+## 1. Fingerprint the device
+
+```bash
+./zlt_xloader --target 192.168.1.1 scan
+```
+
+This reports open ports and the detected profile without changing anything:
+
+```text
+Target: 192.168.1.1  (profile: Tozed ZLT S20 1.12.7 (Dialog / SLT-Mobitel))
+
+  tcp/23     closed
+  tcp/80     OPEN
+  tcp/8080   closed
+  tcp/7547   OPEN
+
+  profile     Tozed ZLT S20 1.12.7 (Dialog / SLT-Mobitel)
+  firmware    S20_1.12.7
+  model       ZLT S20
+  acs_url     http://acs.slt.lk:7547/
+  dry_run     true
+```
+
+A custom port list is available with `scan --ports 23,80,8080,7547,443`.
+
+## 2. Read the live state
+
+```bash
+./zlt_xloader status
+```
+
+`status` reads NVRAM through a shell, so it reports the real lock state even when the web API returns empty values.
+
+## 3. Preview the web API behaviour
+
+```bash
+./zlt_xloader api-exploit
+```
+
+With dry-run active, the login flow, token request and payload sweep are printed but not sent. This is the safest way to learn which `goformId` values your firmware responds to.
+
+## 4. Preview a mutating command
+
+```bash
+./zlt_xloader telnet
+```
+
+The tool prints the command chain it would use to start `telnetd`, including the hash/Base64 encoding and `isTest=false` handling. Nothing is written yet.
+
+## 5. Apply a change (optional)
+
+Only when you have verified the target and accepted the risks:
+
+```bash
+# Start a root shell on port 23
+./zlt_xloader --dry-run=false telnet
+
+# Confirm and verify
+./zlt_xloader status
+```
+
+The `telnetd` started this way is runtime-only. After a reboot, rerun the command — or use `persist` to start telnet and SSH at every boot, which backs up `/etc/rc` first.
+
+## Where to go next
+
+- [Command reference](/docs/commands-recon/) for every command and flag.
+- [Device profiles](/docs/profiles/) to adapt the tool to a packet capture.
+- [Disclaimer & safety model](/docs/disclaimer/) for the full boundaries.

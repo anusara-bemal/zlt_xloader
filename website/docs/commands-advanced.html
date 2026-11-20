@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Advanced commands — zlt_xloader docs</title>
+  <meta name="description" content="api-exploit, tr069-exploit, uart-at, config-decrypt, SMS, USSD and power controls.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="theme-color" content="#f4f1ea">
+  <link rel="canonical" href="https://anusara-bemal.github.io/docs/commands-advanced.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="zlt_xloader">
+  <meta property="og:title" content="Advanced commands — zlt_xloader docs">
+  <meta property="og:description" content="api-exploit, tr069-exploit, uart-at, config-decrypt, SMS, USSD and power controls.">
+  <meta property="og:url" content="https://anusara-bemal.github.io/docs/commands-advanced.html">
+  <meta property="og:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Advanced commands — zlt_xloader docs">
+  <meta name="twitter:description" content="api-exploit, tr069-exploit, uart-at, config-decrypt, SMS, USSD and power controls.">
+  <meta name="twitter:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","name":"zlt_xloader","description":"Security research and device ownership toolkit for the Tozed ZLT S20 4G router.","applicationCategory":"SecurityApplication","operatingSystem":"Windows, Linux, macOS","programmingLanguage":"Go","codeRepository":"https://github.com/anusara-bemal/zlt_xloader","url":"https://anusara-bemal.github.io/","author":{"@type":"Person","name":"anusara-bemal"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"zlt_xloader","item":"https://anusara-bemal.github.io/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://anusara-bemal.github.io/docs/"},{"@type":"ListItem","position":3,"name":"Advanced commands","item":"https://anusara-bemal.github.io/docs/commands-advanced.html"}]}]}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-head">
+    <div class="container head-inner">
+      <a class="brand" href="../index.html" aria-label="zlt_xloader home">
+        <img src="../assets/favicon.svg" alt="" width="26" height="26">
+        <span class="brand-name">zlt_xloader</span>
+        <span class="brand-ver">FIELD MANUAL / 1.0</span>
+      </a>
+
+      <nav aria-label="Primary">
+        <ul class="nav">
+          <li><a href="../index.html#paths">Access paths</a></li>
+          <li><a href="../index.html#gate">Write gate</a></li>
+          <li><a href="../index.html#variants">Variants</a></li>
+          <li><a href="../index.html#setup">Setup</a></li>
+          <li><a href="../index.html#commands">Commands</a></li>
+          <li><a href="index.html" aria-current="page">Docs ↗</a></li>
+        </ul>
+      </nav>
+
+      <div class="head-end">
+        <a class="head-link" href="https://github.com/anusara-bemal/zlt_xloader" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href="../index.html#setup">Get the binary</a>
+        <button id="menu-btn" class="menu-btn" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobile-nav">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
+      <ul>
+        <li><a href="../index.html#paths">Access paths</a></li>
+        <li><a href="../index.html#gate">Write gate</a></li>
+        <li><a href="../index.html#variants">Variants</a></li>
+        <li><a href="../index.html#setup">Setup</a></li>
+        <li><a href="../index.html#commands">Commands</a></li>
+        <li><a href="../index.html#safety">Safety &amp; legal</a></li>
+        <li><a href="index.html">Documentation ↗</a></li>
+      </ul>
+    </nav>
+  </header>
+<main id="main"><div class="container doc-shell">
+    <aside class="doc-sidebar" aria-label="Documentation navigation"><div class="doc-sidebar-group"><div class="doc-sidebar-label">Getting started</div><ul><li><a href="introduction.html">Introduction</a></li><li><a href="disclaimer.html">Disclaimer &amp; safety model</a></li><li><a href="installation.html">Installation</a></li><li><a href="quickstart.html">Quickstart</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Command reference</div><ul><li><a href="commands-recon.html">Recon</a></li><li><a href="commands-access.html">Access &amp; shell</a></li><li><a href="commands-unlock.html">Unlock &amp; optimise</a></li><li><a href="commands-advanced.html" aria-current="page">Advanced</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Guides</div><ul><li><a href="profiles.html">Device profiles</a></li><li><a href="how-it-works.html">How it works</a></li><li><a href="hardware.html">Hardware notes</a></li><li><a href="faq.html">FAQ</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Project</div><ul><li><a href="contributing.html">Contributing</a></li><li><a href="changelog.html">Changelog</a></li></ul></div></aside>
+    <article class="doc-main">
+      <h1>Advanced commands</h1>
+      <p class="doc-lead">api-exploit, tr069-exploit, uart-at, config-decrypt, SMS, USSD and power controls.</p>
+      <div class="prose"><div class="doc-command" id="api-exploit"><div class="doc-command__head"><h3 class="doc-command__name">api-exploit</h3><span class="doc-command__tag">research</span></div><div class="doc-command__body"><p>Performs the exact <code>S20_1.12.7</code> login sequence, runs a concurrent     <code>goformId</code> sweep and optionally fuzzes unlock-related parameter names.     Every response that is not <code>{'{"result":"failure"}'}</code> is reported as a hit,     including unexpected HTML or error bodies — these often reveal undocumented endpoints.  All POSTs go to <code>/reqproc/proc_post</code> as form data; reads use     <code>/reqproc/proc_get</code>. The <code>CSRFToken</code> is sent in the form body and     as a header, exactly as <code>service.js</code> does.</p><pre><code>./zlt_xloader --dry-run=false --yes api-exploit --fuzz --fuzz-max 300 --workers 8</code></pre><table><tbody><tr><td>--username / --password</td><td>Web UI credentials (default admin/admin).</td></tr>
+<tr><td>--output</td><td>Write detected hits to a JSON file.</td></tr>
+<tr><td>--include-builtin</td><td>Merge the verified corpus from service.js.</td></tr>
+<tr><td>--rate</td><td>Per-worker delay, for example 50ms.</td></tr>
+<tr><td>--fuzz / --fuzz-only</td><td>Generate additional goformId candidates.</td></tr>
+<tr><td>--fuzz-max</td><td>Bound the number of generated requests.</td></tr>
+<tr><td>--fuzz-keywords</td><td>Comma-separated keyword list for the generator.</td></tr>
+<tr><td>--workers</td><td>Concurrent worker count (default 16, capped at 256).</td></tr>
+<tr><td>--token-sequence</td><td>Use the older set_random/get_random/set_token experiment.</td></tr></tbody></table></div></div>
+<div class="doc-callout doc-callout--danger"><strong>Fuzzing can brick the device</strong><p>Generated payloads may write NVRAM. Keep dry-run active while exploring, and only enable   it on hardware you can afford to lose.</p></div>
+<div class="doc-command" id="tr069-exploit"><div class="doc-command__head"><h3 class="doc-command__name">tr069-exploit</h3><span class="doc-command__tag">research</span></div><div class="doc-command__body"><p>A local ACS simulator. The router is pointed at your machine, sends a SOAP     <code>Inform</code>, and the tool replies with an <code>InformResponse</code>. On the     next CPE request it pushes a <code>SetParameterValues</code>, <code>Download</code> or     <code>Reboot</code> RPC. SOAP envelopes use the correct CWMP namespaces and XML escaping.  The stock ACS is <code>acs.slt.lk</code>, which means the device can be managed     remotely. <code>--set-acs</code> changes that URL from the local machine.</p><pre><code>./zlt_xloader --dry-run=false --yes tr069-exploit --set-acs --rpc set-params --param InternetGatewayDevice.ManagementServer.URL --value http://192.168.1.2:7547/acs</code></pre><table><tbody><tr><td>--rpc</td><td>RPC to push: set-params, download or reboot.</td></tr>
+<tr><td>--param / --value</td><td>Parameter name and value for set-params.</td></tr>
+<tr><td>--serve-file</td><td>Local file to serve for a Download RPC.</td></tr>
+<tr><td>--set-acs</td><td>Push the local ACS URL with setTR069Config and restart TR-069.</td></tr></tbody></table></div></div>
+<div class="doc-command" id="uart-at"><div class="doc-command__head"><h3 class="doc-command__name">uart-at</h3><span class="doc-command__tag">hardware</span></div><div class="doc-command__body"><p>Serial/UART interface for raw AT commands such as <code>AT^NVW</code> and     <code>AT+CLCK="PN",0</code>. The engine uses send/expect semantics with timeouts and     needs physical access, but does not depend on the locked web API.</p><pre><code>./zlt_xloader uart-at --port COM3 --script</code></pre><table><tbody><tr><td>--list</td><td>List available serial ports.</td></tr>
+<tr><td>--port</td><td>Serial port to open.</td></tr>
+<tr><td>--script</td><td>Preview the scripted AT sequence without opening the port.</td></tr>
+<tr><td>--simulate</td><td>Run against an in-memory mock serial device.</td></tr>
+<tr><td>--command / --expect</td><td>Send one raw command and check for an expected reply.</td></tr></tbody></table></div></div>
+<div class="doc-callout doc-callout--danger"><strong>3.3V TTL only</strong><p>The router's serial header uses 3.3V TTL logic. Do not connect an RS232 adapter   (plus or minus 12V) — it will destroy the board. Pinouts vary by board revision, so   trace them before probing. See <a href="hardware.html">Hardware notes</a>.</p></div>
+<div class="doc-command" id="config-decrypt"><div class="doc-command__head"><h3 class="doc-command__name">config-decrypt</h3><span class="doc-command__tag">offline</span></div><div class="doc-command__body"><p>Parses <code>config.bin</code> as a container with a header, payload and trailing     signature. A per-block Shannon-entropy report separates structured data from     encrypted or compressed regions. Candidate keys are derived from profile constants,     the device serial and IMEI, then tried against common embedded algorithms     (<code>xor</code>, <code>xor-add</code>, AES-CBC, DES-CBC) with a zero IV. Results are     ranked by an entropy/printability score.</p><pre><code>./zlt_xloader config-decrypt --file ./config.bin --top 10 --serial &lt;SERIAL&gt; --imei &lt;IMEI&gt;</code></pre><table><tbody><tr><td>--file</td><td>Path to the config.bin container.</td></tr>
+<tr><td>--top</td><td>Number of candidate keys to report.</td></tr>
+<tr><td>--serial / --imei</td><td>Device identifiers used as key material.</td></tr>
+<tr><td>--key / --algo</td><td>Decrypt with a known key and algorithm.</td></tr>
+<tr><td>--out</td><td>Output file for decrypted data.</td></tr></tbody></table></div></div>
+<h2 id="messaging-and-power">Messaging and power</h2>
+<pre><code class="language-bash"># SMS
+./zlt_xloader --dry-run=false sms list
+./zlt_xloader --dry-run=false sms send --to 0771234567 --message "hello"
+
+# USSD
+./zlt_xloader --dry-run=false ussd --code '*#123#'
+
+# Power (destructive — confirmation required)
+./zlt_xloader --dry-run=false --yes power reboot
+./zlt_xloader --dry-run=false --yes power off</code></pre>
+<p><code>sms</code> lists stored messages or sends one. <code>ussd</code> sends a USSD code and reads the response. <code>power</code> reboots or powers off the device and requires explicit confirmation.</p></div>
+      <p class="hint-inline">Last reviewed: 2026-11-20</p>
+      <nav class="doc-pager" aria-label="Documentation pages"><a href="commands-unlock.html"><span>← Previous</span><strong>Unlock &amp; optimise</strong></a><a href="profiles.html"><span>Next →</span><strong>Device profiles</strong></a></nav>
+    </article>
+    <aside class="doc-toc" aria-label="On this page"><div class="doc-toc-label">On this page</div><nav><ul><li class="depth-2"><a href="#messaging-and-power">Messaging and power</a></li></ul></nav></aside>
+  </div></main>
+  <footer class="site-foot">
+    <div class="container foot-grid">
+      <div>
+        <a class="brand" href="../index.html"><img src="../assets/favicon.svg" alt="" width="26" height="26"><span class="brand-name">zlt_xloader</span></a>
+        <p>Security research and device ownership for the Tozed ZLT S20. For lawful use on hardware you own.</p>
+      </div>
+      <div class="foot-col"><h5>Docs</h5><ul><li><a href="index.html">Index</a></li><li><a href="disclaimer.html">Disclaimer</a></li><li><a href="quickstart.html">Quickstart</a></li></ul></div>
+      <div class="foot-col"><h5>Project</h5><ul><li><a href="../index.html#paths">Features</a></li><li><a href="changelog.html">Changelog</a></li><li><a href="contributing.html">Contributing</a></li></ul></div>
+      <div class="foot-col"><h5>Reference</h5><ul><li><a href="how-it-works.html">How it works</a></li><li><a href="hardware.html">Hardware notes</a></li><li><a href="faq.html">FAQ</a></li></ul></div>
+    </div>
+    <div class="container foot-bottom"><div>Copyright © 2026 anusara-bemal. All rights reserved.</div><div>Educational use only — do not misuse.</div></div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

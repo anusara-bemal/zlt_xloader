@@ -1,15 +1,15 @@
 version: 2
 
-project_name: zlt-unlocker
+project_name: zlt_xloader
 
 before:
   hooks:
     - go mod tidy
 
 builds:
-  - id: zlt-unlocker
+  - id: zlt_xloader
     main: .
-    binary: zlt-unlocker
+    binary: zlt_xloader
     env:
       - CGO_ENABLED=0
     flags:

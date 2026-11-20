@@ -32,7 +32,7 @@ jobs:
       - name: Build host binary
         run: make build VERSION=${{ github.ref_name }}
       - name: Smoke test
-        run: ./zlt-unlocker version
+        run: ./zlt_xloader version
 
   cross-compile:
     name: Cross-compile release matrix
@@ -46,6 +46,6 @@ jobs:
       - run: make build-all VERSION=${{ github.ref_name }}
       - uses: actions/upload-artifact@v4
         with:
-          name: zlt-unlocker-all
+          name: zlt_xloader-all
           path: dist/
           if-no-files-found: error

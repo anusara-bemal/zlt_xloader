@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How it works — zlt_xloader docs</title>
+  <meta name="description" content="The login and CSRF flow, payload corpus, worker pool, TR-069 role reversal, UART path and config analysis.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="theme-color" content="#f4f1ea">
+  <link rel="canonical" href="https://anusara-bemal.github.io/docs/how-it-works.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="zlt_xloader">
+  <meta property="og:title" content="How it works — zlt_xloader docs">
+  <meta property="og:description" content="The login and CSRF flow, payload corpus, worker pool, TR-069 role reversal, UART path and config analysis.">
+  <meta property="og:url" content="https://anusara-bemal.github.io/docs/how-it-works.html">
+  <meta property="og:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How it works — zlt_xloader docs">
+  <meta name="twitter:description" content="The login and CSRF flow, payload corpus, worker pool, TR-069 role reversal, UART path and config analysis.">
+  <meta name="twitter:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","name":"zlt_xloader","description":"Security research and device ownership toolkit for the Tozed ZLT S20 4G router.","applicationCategory":"SecurityApplication","operatingSystem":"Windows, Linux, macOS","programmingLanguage":"Go","codeRepository":"https://github.com/anusara-bemal/zlt_xloader","url":"https://anusara-bemal.github.io/","author":{"@type":"Person","name":"anusara-bemal"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"zlt_xloader","item":"https://anusara-bemal.github.io/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://anusara-bemal.github.io/docs/"},{"@type":"ListItem","position":3,"name":"How it works","item":"https://anusara-bemal.github.io/docs/how-it-works.html"}]}]}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-head">
+    <div class="container head-inner">
+      <a class="brand" href="../index.html" aria-label="zlt_xloader home">
+        <img src="../assets/favicon.svg" alt="" width="26" height="26">
+        <span class="brand-name">zlt_xloader</span>
+        <span class="brand-ver">FIELD MANUAL / 1.0</span>
+      </a>
+
+      <nav aria-label="Primary">
+        <ul class="nav">
+          <li><a href="../index.html#paths">Access paths</a></li>
+          <li><a href="../index.html#gate">Write gate</a></li>
+          <li><a href="../index.html#variants">Variants</a></li>
+          <li><a href="../index.html#setup">Setup</a></li>
+          <li><a href="../index.html#commands">Commands</a></li>
+          <li><a href="index.html" aria-current="page">Docs ↗</a></li>
+        </ul>
+      </nav>
+
+      <div class="head-end">
+        <a class="head-link" href="https://github.com/anusara-bemal/zlt_xloader" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href="../index.html#setup">Get the binary</a>
+        <button id="menu-btn" class="menu-btn" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobile-nav">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
+      <ul>
+        <li><a href="../index.html#paths">Access paths</a></li>
+        <li><a href="../index.html#gate">Write gate</a></li>
+        <li><a href="../index.html#variants">Variants</a></li>
+        <li><a href="../index.html#setup">Setup</a></li>
+        <li><a href="../index.html#commands">Commands</a></li>
+        <li><a href="../index.html#safety">Safety &amp; legal</a></li>
+        <li><a href="index.html">Documentation ↗</a></li>
+      </ul>
+    </nav>
+  </header>
+<main id="main"><div class="container doc-shell">
+    <aside class="doc-sidebar" aria-label="Documentation navigation"><div class="doc-sidebar-group"><div class="doc-sidebar-label">Getting started</div><ul><li><a href="introduction.html">Introduction</a></li><li><a href="disclaimer.html">Disclaimer &amp; safety model</a></li><li><a href="installation.html">Installation</a></li><li><a href="quickstart.html">Quickstart</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Command reference</div><ul><li><a href="commands-recon.html">Recon</a></li><li><a href="commands-access.html">Access &amp; shell</a></li><li><a href="commands-unlock.html">Unlock &amp; optimise</a></li><li><a href="commands-advanced.html">Advanced</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Guides</div><ul><li><a href="profiles.html">Device profiles</a></li><li><a href="how-it-works.html" aria-current="page">How it works</a></li><li><a href="hardware.html">Hardware notes</a></li><li><a href="faq.html">FAQ</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Project</div><ul><li><a href="contributing.html">Contributing</a></li><li><a href="changelog.html">Changelog</a></li></ul></div></aside>
+    <article class="doc-main">
+      <h1>How it works</h1>
+      <p class="doc-lead">The login and CSRF flow, payload corpus, worker pool, TR-069 role reversal, UART path and config analysis.</p>
+      <div class="prose"><h2 id="login-and-csrf-token">Login and CSRF token</h2>
+<p>The firmware gates state-changing requests behind a session-bound <code>CSRFToken</code>. The exact flow, implemented in <code>internal/api/csrf.go</code>, is:</p>
+<ol><li><code>GET /reqproc/proc_get?cmd=get_random_login</code> returns <code>{"random_login":"..."}</code>.</li><li><code>POST /reqproc/proc_post</code> with <code>goformId=LOGIN</code>, <code>isTest=false</code>, a Base64-encoded username, a password built from <code>hex(SHA256(random_login + password))</code>, and an <strong>empty</strong> <code>CSRFToken</code>. Result codes <code>0</code> and <code>4</code> mean success.</li><li>Only after login succeeds, <code>GET /reqproc/proc_get?cmd=get_token</code> returns the token that is attached to every later POST.</li></ol>
+<p>Calling <code>get_token</code> before login is rejected by this firmware, so the tool never does it. The older <code>set_random → get_random → set_token</code> sequence remains available behind <code>--token-sequence</code> as a separate experiment.</p>
+<h2 id="payload-corpus-and-fuzzer">Payload corpus and fuzzer</h2>
+<p><code>api-exploit</code> merges the profile's payloads with a built-in corpus:</p>
+<ul><li><strong>Verified</strong> IDs recovered from <code>service.js</code>, such as <code>TZ_CMD_SECURE_LOGIN</code>, <code>TZ_UNLOCK_PLMN</code>, <code>UNLOCK_NETWORK</code> and <code>CLEAR_IMSI</code>.</li><li><strong>Reported</strong> IDs from black-box testing, such as <code>SET_PLMN</code> and <code>SET_SYSTEM_INFO</code>, which this firmware may ignore.</li></ul>
+<p><code>--fuzz</code> generates candidates by combining unlock-related keywords with known goformIds, prefix-derived IDs and parameter sweeps. Generation is bounded by <code>--fuzz-max</code> and driven entirely by the profile's <code>fuzz</code> section.</p>
+<h2 id="concurrent-payload-sweep">Concurrent payload sweep</h2>
+<p>Candidate values are queued into a bounded goroutine pool — 16 workers by default, capped at 256. Each worker posts one command and compares the response with the canonical failure body. Hits, including unexpected non-JSON responses, are collected, logged and optionally written to JSON. A per-worker rate limit reduces load on the device.</p>
+<h2 id="tr-069-role-reversal">TR-069 role reversal</h2>
+<p>The router's stock ACS is a remote server, which means the device can be managed remotely. <code>tr069-exploit</code> turns the local machine into the ACS:</p>
+<ol><li>Point the router's ACS URL at your machine — manually or with <code>--set-acs</code>.</li><li>The router sends a SOAP <code>Inform</code>; the tool replies with <code>InformResponse</code>.</li><li>On the next CPE request, the tool pushes <code>SetParameterValues</code>, <code>Download</code> or <code>Reboot</code>.</li></ol>
+<h2 id="uart-at-path">UART / AT path</h2>
+<p>Software locks can sometimes be bypassed at the hardware level. <code>uart-at</code> opens a 3.3V TTL serial connection and runs a scripted AT sequence with send/expect semantics and timeouts. It needs physical access but does not depend on the locked web API.</p>
+<h2 id="config-decryption">Config decryption</h2>
+<p><code>config.bin</code> is analysed as a container with a header, payload and trailing signature. Per-block Shannon entropy distinguishes structured data from encrypted or compressed regions. Key candidates derived from profile constants, the serial and the IMEI are tried against several embedded algorithms, and results are ranked by an entropy/printability score.</p></div>
+      <p class="hint-inline">Last reviewed: 2026-11-20</p>
+      <nav class="doc-pager" aria-label="Documentation pages"><a href="profiles.html"><span>← Previous</span><strong>Device profiles</strong></a><a href="hardware.html"><span>Next →</span><strong>Hardware notes</strong></a></nav>
+    </article>
+    <aside class="doc-toc" aria-label="On this page"><div class="doc-toc-label">On this page</div><nav><ul><li class="depth-2"><a href="#login-and-csrf-token">Login and CSRF token</a></li><li class="depth-2"><a href="#payload-corpus-and-fuzzer">Payload corpus and fuzzer</a></li><li class="depth-2"><a href="#concurrent-payload-sweep">Concurrent payload sweep</a></li><li class="depth-2"><a href="#tr-069-role-reversal">TR-069 role reversal</a></li><li class="depth-2"><a href="#uart-at-path">UART / AT path</a></li><li class="depth-2"><a href="#config-decryption">Config decryption</a></li></ul></nav></aside>
+  </div></main>
+  <footer class="site-foot">
+    <div class="container foot-grid">
+      <div>
+        <a class="brand" href="../index.html"><img src="../assets/favicon.svg" alt="" width="26" height="26"><span class="brand-name">zlt_xloader</span></a>
+        <p>Security research and device ownership for the Tozed ZLT S20. For lawful use on hardware you own.</p>
+      </div>
+      <div class="foot-col"><h5>Docs</h5><ul><li><a href="index.html">Index</a></li><li><a href="disclaimer.html">Disclaimer</a></li><li><a href="quickstart.html">Quickstart</a></li></ul></div>
+      <div class="foot-col"><h5>Project</h5><ul><li><a href="../index.html#paths">Features</a></li><li><a href="changelog.html">Changelog</a></li><li><a href="contributing.html">Contributing</a></li></ul></div>
+      <div class="foot-col"><h5>Reference</h5><ul><li><a href="how-it-works.html">How it works</a></li><li><a href="hardware.html">Hardware notes</a></li><li><a href="faq.html">FAQ</a></li></ul></div>
+    </div>
+    <div class="container foot-bottom"><div>Copyright © 2026 anusara-bemal. All rights reserved.</div><div>Educational use only — do not misuse.</div></div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

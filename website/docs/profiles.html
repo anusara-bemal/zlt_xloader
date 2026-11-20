@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Device profiles — zlt_xloader docs</title>
+  <meta name="description" content="Edit the JSON profile to match a packet capture without recompiling the binary.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="theme-color" content="#f4f1ea">
+  <link rel="canonical" href="https://anusara-bemal.github.io/docs/profiles.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="zlt_xloader">
+  <meta property="og:title" content="Device profiles — zlt_xloader docs">
+  <meta property="og:description" content="Edit the JSON profile to match a packet capture without recompiling the binary.">
+  <meta property="og:url" content="https://anusara-bemal.github.io/docs/profiles.html">
+  <meta property="og:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Device profiles — zlt_xloader docs">
+  <meta name="twitter:description" content="Edit the JSON profile to match a packet capture without recompiling the binary.">
+  <meta name="twitter:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","name":"zlt_xloader","description":"Security research and device ownership toolkit for the Tozed ZLT S20 4G router.","applicationCategory":"SecurityApplication","operatingSystem":"Windows, Linux, macOS","programmingLanguage":"Go","codeRepository":"https://github.com/anusara-bemal/zlt_xloader","url":"https://anusara-bemal.github.io/","author":{"@type":"Person","name":"anusara-bemal"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"zlt_xloader","item":"https://anusara-bemal.github.io/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://anusara-bemal.github.io/docs/"},{"@type":"ListItem","position":3,"name":"Device profiles","item":"https://anusara-bemal.github.io/docs/profiles.html"}]}]}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-head">
+    <div class="container head-inner">
+      <a class="brand" href="../index.html" aria-label="zlt_xloader home">
+        <img src="../assets/favicon.svg" alt="" width="26" height="26">
+        <span class="brand-name">zlt_xloader</span>
+        <span class="brand-ver">FIELD MANUAL / 1.0</span>
+      </a>
+
+      <nav aria-label="Primary">
+        <ul class="nav">
+          <li><a href="../index.html#paths">Access paths</a></li>
+          <li><a href="../index.html#gate">Write gate</a></li>
+          <li><a href="../index.html#variants">Variants</a></li>
+          <li><a href="../index.html#setup">Setup</a></li>
+          <li><a href="../index.html#commands">Commands</a></li>
+          <li><a href="index.html" aria-current="page">Docs ↗</a></li>
+        </ul>
+      </nav>
+
+      <div class="head-end">
+        <a class="head-link" href="https://github.com/anusara-bemal/zlt_xloader" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href="../index.html#setup">Get the binary</a>
+        <button id="menu-btn" class="menu-btn" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobile-nav">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
+      <ul>
+        <li><a href="../index.html#paths">Access paths</a></li>
+        <li><a href="../index.html#gate">Write gate</a></li>
+        <li><a href="../index.html#variants">Variants</a></li>
+        <li><a href="../index.html#setup">Setup</a></li>
+        <li><a href="../index.html#commands">Commands</a></li>
+        <li><a href="../index.html#safety">Safety &amp; legal</a></li>
+        <li><a href="index.html">Documentation ↗</a></li>
+      </ul>
+    </nav>
+  </header>
+<main id="main"><div class="container doc-shell">
+    <aside class="doc-sidebar" aria-label="Documentation navigation"><div class="doc-sidebar-group"><div class="doc-sidebar-label">Getting started</div><ul><li><a href="introduction.html">Introduction</a></li><li><a href="disclaimer.html">Disclaimer &amp; safety model</a></li><li><a href="installation.html">Installation</a></li><li><a href="quickstart.html">Quickstart</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Command reference</div><ul><li><a href="commands-recon.html">Recon</a></li><li><a href="commands-access.html">Access &amp; shell</a></li><li><a href="commands-unlock.html">Unlock &amp; optimise</a></li><li><a href="commands-advanced.html">Advanced</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Guides</div><ul><li><a href="profiles.html" aria-current="page">Device profiles</a></li><li><a href="how-it-works.html">How it works</a></li><li><a href="hardware.html">Hardware notes</a></li><li><a href="faq.html">FAQ</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Project</div><ul><li><a href="contributing.html">Contributing</a></li><li><a href="changelog.html">Changelog</a></li></ul></div></aside>
+    <article class="doc-main">
+      <h1>Device profiles</h1>
+      <p class="doc-lead">Edit the JSON profile to match a packet capture without recompiling the binary.</p>
+      <div class="prose"><p>A profile is a JSON file that holds every device-specific constant: endpoint paths, login parameters, payload IDs, fuzz inputs, serial settings, crypto hints and unlock keys. This keeps the Go binary generic and makes field corrections fast.</p>
+<h2 id="selecting-a-profile">Selecting a profile</h2>
+<pre><code class="language-bash"># Built-in default: S20_1.12.7 (Dialog / SLT-Mobitel)
+./zlt_xloader scan
+
+# Alternate shipped profiles
+./zlt_xloader --profile ./profiles/zlt_m910w_1.13.6_mtn.json scan
+./zlt_xloader --profile ./profiles/zlt_s20_1.02.7_org.json status</code></pre>
+<p>The MTN and ORG profiles carry their own fingerprint commands, payload sets and unlock parameters, so <code>unlock</code> uses the correct NVRAM and AT keys for those firmware variants.</p>
+<h2 id="copy-and-edit">Copy and edit</h2>
+<p>Copy <code>profiles/zlt_s20_1.12.7.json</code>, give it a new name, and pass it with <code>--profile</code>. Useful fields:</p>
+<pre><code class="language-jsonc">{
+  "endpoints": {
+    "post_path": "/reqproc/proc_post",
+    "get_cmd_path": "/reqproc/proc_get",
+    "get_token_cmd": "get_token",
+    "get_random_login_cmd": "get_random_login",
+    "csrf_token_header": "CSRFToken"
+  },
+  "login": { "username": "admin", "password": "admin" },
+  "payloads": [ /* add goformIds observed in your packet capture */ ],
+  "fuzz": {
+    "keywords": ["plmn", "lock", "sim", "unlock", "nv_write"],
+    "goform_ids": ["TZ_UNLOCK_PLMN", "UNLOCK_NETWORK", "..."],
+    "values": ["0", "1", "false", "true", "y", "n"],
+    "max_requests": 400
+  },
+  "uart": { "port": "COM3", "baud": 115200 },
+  "crypto": { "known_keys": [ /* keys found in firmware */ ] },
+  "unlock": {
+    "backup_path": "/tmp/zlt_xloader-nv-backup.txt",
+    "save": true,
+    "nv": [
+      {
+        "key": "tz_lock_plmn_state",
+        "value": "no",
+        "path": "/etc_ro/default/default_parameter_sys"
+      }
+    ],
+    "at": [{ "key": "tz_lock_plmn_state", "value": "no", "path": "" }]
+  }
+}</code></pre>
+<h2 id="capture-mirror-verify">Capture, mirror, verify</h2>
+<ol><li>Capture a real login/session with a MITM proxy or browser developer tools.</li><li>Mirror the exact parameter names, IDs and request order into the profile.</li><li>Run <code>scan</code> and <code>status</code> to confirm fingerprinting still works.</li><li>Run the mutating command with dry-run enabled and check the printed plan before applying it.</li></ol>
+<div class="doc-callout doc-callout--warn"><strong>Never commit personal data</strong><p>Captures often contain IMEIs, serial numbers, phone numbers and session tokens. Strip those values before contributing a profile correction.</p></div>
+<h2 id="verified-versus-reported">Verified versus reported</h2>
+<p>The built-in corpus is split into <strong>verified</strong> IDs recovered from the firmware's <code>service.js</code> and <strong>reported</strong> IDs supplied from black-box testing. Verified entries are trustworthy on the matching firmware build; reported entries may be ignored by other builds. Profile corrections that turn a reported entry into a verified one are especially welcome.</p></div>
+      <p class="hint-inline">Last reviewed: 2026-11-20</p>
+      <nav class="doc-pager" aria-label="Documentation pages"><a href="commands-advanced.html"><span>← Previous</span><strong>Advanced</strong></a><a href="how-it-works.html"><span>Next →</span><strong>How it works</strong></a></nav>
+    </article>
+    <aside class="doc-toc" aria-label="On this page"><div class="doc-toc-label">On this page</div><nav><ul><li class="depth-2"><a href="#selecting-a-profile">Selecting a profile</a></li><li class="depth-2"><a href="#copy-and-edit">Copy and edit</a></li><li class="depth-2"><a href="#capture-mirror-verify">Capture, mirror, verify</a></li><li class="depth-2"><a href="#verified-versus-reported">Verified versus reported</a></li></ul></nav></aside>
+  </div></main>
+  <footer class="site-foot">
+    <div class="container foot-grid">
+      <div>
+        <a class="brand" href="../index.html"><img src="../assets/favicon.svg" alt="" width="26" height="26"><span class="brand-name">zlt_xloader</span></a>
+        <p>Security research and device ownership for the Tozed ZLT S20. For lawful use on hardware you own.</p>
+      </div>
+      <div class="foot-col"><h5>Docs</h5><ul><li><a href="index.html">Index</a></li><li><a href="disclaimer.html">Disclaimer</a></li><li><a href="quickstart.html">Quickstart</a></li></ul></div>
+      <div class="foot-col"><h5>Project</h5><ul><li><a href="../index.html#paths">Features</a></li><li><a href="changelog.html">Changelog</a></li><li><a href="contributing.html">Contributing</a></li></ul></div>
+      <div class="foot-col"><h5>Reference</h5><ul><li><a href="how-it-works.html">How it works</a></li><li><a href="hardware.html">Hardware notes</a></li><li><a href="faq.html">FAQ</a></li></ul></div>
+    </div>
+    <div class="container foot-bottom"><div>Copyright © 2026 anusara-bemal. All rights reserved.</div><div>Educational use only — do not misuse.</div></div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

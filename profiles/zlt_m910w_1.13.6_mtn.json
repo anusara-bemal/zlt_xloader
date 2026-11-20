@@ -51,7 +51,7 @@
     "known_keys": ["0000000000000000", "Tozed", "ZLT", "M910W", "CMR455", "mtn"]
   },
   "unlock": {
-    "backup_path": "/tmp/zlt-unlocker-nv-backup.txt",
+    "backup_path": "/tmp/zlt_xloader-nv-backup.txt",
     "save": true,
     "nv": [
       { "key": "tz_lock_plmn_state", "value": "no", "path": "/etc_ro/default/default_parameter_sys" },

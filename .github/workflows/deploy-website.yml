@@ -1,0 +1,63 @@
+name: Deploy product website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'website/**'
+      - '.github/workflows/deploy-website.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      # The committed HTML carries the default canonical/origin. When a final
+      # domain is configured, rewrite it in the published copy only.
+      - name: Apply site URL
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          if [ -n "$SITE_URL" ]; then
+            find website -type f \( -name '*.html' -o -name '*.xml' -o -name '*.txt' \) \
+              -exec sed -i "s|https://anusara-bemal.github.io|$SITE_URL|g" {} +
+          fi
+
+      - name: Set custom domain
+        env:
+          PAGES_CNAME: ${{ vars.PAGES_CNAME }}
+        run: |
+          if [ -n "$PAGES_CNAME" ]; then
+            printf '%s\n' "$PAGES_CNAME" > website/CNAME
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: website
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

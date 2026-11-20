@@ -1,0 +1,78 @@
+---
+title: Installation
+description: Download a signed release archive, build from source, or cross-compile the full platform matrix.
+order: 3
+section: Getting started
+updated: "2026-11-20"
+---
+
+import Callout from '../../components/Callout.astro';
+
+The shipped binary is named `zlt_xloader`. The Go module path is `github.com/anusara-bemal/zlt_xloader`, matching the repository.
+
+## From a release
+
+Pre-built, checksummed archives for Linux, Windows and macOS are published on the [Releases page](https://github.com/anusara-bemal/zlt_xloader/releases).
+
+1. Download the archive for your platform and architecture.
+2. Verify it against the published `checksums.txt`.
+3. Extract it and run the `zlt_xloader` binary inside.
+
+```bash
+# Example on Linux or macOS
+sha256sum zlt_xloader_linux_amd64.tar.gz
+# compare with the matching line in checksums.txt
+tar -xzf zlt_xloader_linux_amd64.tar.gz
+./zlt_xloader version
+```
+
+<Callout type="warn" title="Verify the checksum">
+  A checksum file proves the archive you downloaded matches the one that was published. Get the checksum file from the same release page, not from a link in a message or forum post.
+</Callout>
+
+## From source
+
+Requires Go 1.22 or newer.
+
+```bash
+git clone https://github.com/anusara-bemal/zlt_xloader.git
+cd zlt_xloader
+go build -o zlt_xloader .
+./zlt_xloader version
+```
+
+## Cross-compile with the Makefile
+
+```bash
+make build-all VERSION=v1.0.0
+# artifacts land in dist/{windows,linux,macos}/
+```
+
+Supported targets:
+
+| OS | Architectures |
+| --- | --- |
+| Windows | amd64, 386 |
+| Linux | amd64, arm64, armv7 |
+| macOS | amd64, arm64 |
+
+Other useful targets:
+
+```bash
+make check     # format, vet and test
+make cover     # coverage report
+make snapshot  # local GoReleaser snapshot
+```
+
+## Verify the install
+
+```bash
+./zlt_xloader version
+./zlt_xloader --help
+```
+
+`version` reports the version, commit and build date, injected at build time. If both commands run, the binary is ready — continue to [Quickstart](/docs/quickstart/).
+
+## Platform notes
+
+On Windows with Git Bash / MSYS, Unix-style arguments such as `/etc_ro/...` are converted into Windows paths. Prefix commands that use `--remote` with `MSYS_NO_PATHCONV=1`.

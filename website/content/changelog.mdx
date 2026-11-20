@@ -1,0 +1,43 @@
+---
+title: Changelog
+description: Release history and notable changes to zlt_xloader.
+order: 31
+section: Project
+updated: "2026-11-20"
+---
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The source of truth is `CHANGELOG.md` in the repository.
+
+## Unreleased
+
+### Added
+
+- Professional repository structure: `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, issue forms, pull-request template and changelog.
+- Tag-triggered release workflow with GoReleaser, producing checksummed archives for Linux, Windows and macOS.
+- Centralised build metadata in `internal/buildinfo`, injected by the Makefile and GoReleaser; `zlt_xloader version` now reports version, commit and date.
+- `make check`, `make ci`, `make cover`, `make snapshot` and `make release` targets.
+- Prominent educational-use warning in the README, CLI help, `LICENSE` and `WARNING.md`.
+- SSH client transport and `shell --ssh`, including best-effort dropbear enablement.
+- Device profiles for the MTN `S20_1.13.6` and ORG `S20_1.02.7` variants.
+- `tr069-exploit --set-acs` to push the local ACS URL via `setTR069Config`.
+- Additional goformIds: `SET_DEVICE_MODE`, `TZ_SET_USB_STATUS`, `DMZ_SETTING`, `setTR069Config` and `REBOOT_DEVICE`.
+- Locally generated logo, device render and CLI preview artwork.
+
+### Changed
+
+- Canonical Go module is now `github.com/anusara-bemal/zlt_xloader`, matching the repository name.
+- Licence changed from MIT to proprietary all-rights-reserved; `NOTICE` added.
+
+### Removed
+
+- Accidental empty directories and the duplicate copy of the firmware reference dumps.
+
+## 1.0.0 — 2026-11-20
+
+### Added
+
+- Initial toolkit: `scan`, `api-exploit`, `telnet`, `unlock`, `persist`, `unhide`, `optimize`, `shell`, `status`, `power`, `sms`, `ussd`, `download`, `tr069-exploit`, `uart-at`, `config-decrypt` and `version`.
+- Editable JSON device profile for the Tozed ZLT S20 (`S20_1.12.7`).
+- Dry-run-by-default safety model with interactive confirmation for destructive operations.
+- Unit tests across the API, crypto, profile, TR-069, UART, netutil and safety packages.
+- Cross-platform Makefile build matrix and CI workflow.

@@ -1,0 +1,46 @@
+---
+title: How it works
+description: The login and CSRF flow, payload corpus, worker pool, TR-069 role reversal, UART path and config analysis.
+order: 21
+section: Guides
+updated: "2026-11-20"
+---
+
+## Login and CSRF token
+
+The firmware gates state-changing requests behind a session-bound `CSRFToken`. The exact flow, implemented in `internal/api/csrf.go`, is:
+
+1. `GET /reqproc/proc_get?cmd=get_random_login` returns `{"random_login":"..."}`.
+2. `POST /reqproc/proc_post` with `goformId=LOGIN`, `isTest=false`, a Base64-encoded username, a password built from `hex(SHA256(random_login + password))`, and an **empty** `CSRFToken`. Result codes `0` and `4` mean success.
+3. Only after login succeeds, `GET /reqproc/proc_get?cmd=get_token` returns the token that is attached to every later POST.
+
+Calling `get_token` before login is rejected by this firmware, so the tool never does it. The older `set_random → get_random → set_token` sequence remains available behind `--token-sequence` as a separate experiment.
+
+## Payload corpus and fuzzer
+
+`api-exploit` merges the profile's payloads with a built-in corpus:
+
+- **Verified** IDs recovered from `service.js`, such as `TZ_CMD_SECURE_LOGIN`, `TZ_UNLOCK_PLMN`, `UNLOCK_NETWORK` and `CLEAR_IMSI`.
+- **Reported** IDs from black-box testing, such as `SET_PLMN` and `SET_SYSTEM_INFO`, which this firmware may ignore.
+
+`--fuzz` generates candidates by combining unlock-related keywords with known goformIds, prefix-derived IDs and parameter sweeps. Generation is bounded by `--fuzz-max` and driven entirely by the profile's `fuzz` section.
+
+## Concurrent payload sweep
+
+Candidate values are queued into a bounded goroutine pool — 16 workers by default, capped at 256. Each worker posts one command and compares the response with the canonical failure body. Hits, including unexpected non-JSON responses, are collected, logged and optionally written to JSON. A per-worker rate limit reduces load on the device.
+
+## TR-069 role reversal
+
+The router's stock ACS is a remote server, which means the device can be managed remotely. `tr069-exploit` turns the local machine into the ACS:
+
+1. Point the router's ACS URL at your machine — manually or with `--set-acs`.
+2. The router sends a SOAP `Inform`; the tool replies with `InformResponse`.
+3. On the next CPE request, the tool pushes `SetParameterValues`, `Download` or `Reboot`.
+
+## UART / AT path
+
+Software locks can sometimes be bypassed at the hardware level. `uart-at` opens a 3.3V TTL serial connection and runs a scripted AT sequence with send/expect semantics and timeouts. It needs physical access but does not depend on the locked web API.
+
+## Config decryption
+
+`config.bin` is analysed as a container with a header, payload and trailing signature. Per-block Shannon entropy distinguishes structured data from encrypted or compressed regions. Key candidates derived from profile constants, the serial and the IMEI are tried against several embedded algorithms, and results are ranked by an entropy/printability score.

@@ -1,0 +1,39 @@
+---
+title: Hardware notes
+description: Serial voltage, pinouts, reboot behaviour and what can and cannot be changed from the router.
+order: 22
+section: Guides
+updated: "2026-11-20"
+---
+
+import Callout from '../../components/Callout.astro';
+
+<Callout type="danger" title="Voltage warning">
+  The router's serial header uses 3.3V TTL logic. Do not connect an RS232 adapter, which uses plus or minus 12V — it will destroy the board. Use a 3.3V USB-UART adapter and trace the pinout for your board revision before probing.
+</Callout>
+
+## Serial / UART
+
+- Use `uart-at --list` to enumerate ports on this machine.
+- Use `uart-at --port COM3 --script` to preview the scripted AT sequence without opening the port.
+- Use `uart-at --simulate --script` to verify the AT engine end-to-end against an in-memory mock device.
+- Pinouts vary by board revision. Do not assume a layout from a photo of a different board.
+
+## Shell persistence
+
+`telnet` starts a runtime-only `telnetd` on port 23. After a reboot, that shell is gone. Two options:
+
+- Rerun `telnet` after each reboot.
+- Run `persist`, which appends a boot block to `/etc/rc` (backed up to `/etc/rc.zlt-backup`) and enables the NVRAM flags for telnet, ADB and dropbear. After reboot, ports 23 and 22 open automatically.
+
+ADB on this firmware binds only `127.0.0.1:5037` in host mode and needs USB. Network ADB on port 5555 is not available without additional firmware support.
+
+## RF and network limits
+
+`optimize` prints band, bandwidth, RSRP/RSRQ/SINR, PCI and SIM PLMN, and changes only what the router controls: DNS, data-cap and quota alerts, QoS and band lock. Carrier-core latency from CGNAT or roaming cannot be changed from the device.
+
+On the reference device the air interface was already healthy — Band 3, 20 MHz, SINR around 19 dB — so remaining latency was in the operator's network.
+
+## Physical risk
+
+Enabling ports, writing NVRAM and pushing a TR-069 `Download` RPC can render the router unusable. Modifying firmware can permanently brick the device and void its warranty. Keep a recovery plan and only work on hardware you can afford to lose.

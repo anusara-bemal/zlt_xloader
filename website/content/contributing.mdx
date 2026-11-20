@@ -1,0 +1,46 @@
+---
+title: Contributing
+description: Development workflow, tests, profile corrections and community standards.
+order: 30
+section: Project
+updated: "2026-11-20"
+---
+
+Contributions are welcome. Read `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md` in the repository before opening a pull request.
+
+## Ground rules
+
+- Keep device-specific constants in profiles, not in Go source.
+- Add tests for new parsers and protocol code.
+- Never submit captured personal data — IMEIs, serials, phone numbers or session tokens.
+- Run `make check` before opening a PR.
+
+## Local workflow
+
+```bash
+git clone https://github.com/anusara-bemal/zlt_xloader.git
+cd zlt_xloader
+
+make check     # gofmt, go vet, go test
+make cover     # coverage report
+```
+
+## Useful targets
+
+| Target | Purpose |
+| --- | --- |
+| `make check` | Format, vet and test the whole module. |
+| `make ci` | The full CI-equivalent check. |
+| `make cover` | Generate a coverage report. |
+| `make snapshot` | Local GoReleaser snapshot build. |
+| `make build-all VERSION=v1.0.0` | Cross-compile the release matrix. |
+
+## Reporting problems
+
+- **Bugs:** open an issue with the firmware version, profile, target platform and the exact command. Redact identifiers.
+- **Security issues:** follow `SECURITY.md` and report privately.
+- **Profile corrections:** include the observed request/response shape and explain how you verified it. Mark whether a value is confirmed against firmware source or only black-box reported.
+
+## Licence and attribution
+
+Copyright (c) 2026 anusara-bemal. All rights reserved. This is a proprietary project; no licence to use, copy, modify or distribute the source is granted except by a separate written agreement. See `LICENSE` and `NOTICE` in the repository for full terms and third-party attribution.

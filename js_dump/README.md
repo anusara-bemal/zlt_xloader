@@ -4,7 +4,7 @@ These files are minified JavaScript assets extracted from the web UI of a
 Tozed ZLT S20 router running firmware `S20_1.12.7`.
 
 They are **reference material only**. They are not compiled into the
-`zlt-unlocker` binary and are not used at runtime. They are kept in the
+`zlt_xloader` binary and are not used at runtime. They are kept in the
 repository so that the API endpoints, `goformId` values, token flow and hidden
 UI flags implemented in this tool can be verified against the original
 firmware source.

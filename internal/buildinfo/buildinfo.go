@@ -1,6 +1,6 @@
 // Package buildinfo holds build-time metadata that is injected with -ldflags
 // by the Makefile and by GoReleaser. Keeping these variables in one place
-// gives `zlt-unlocker version` a single, authoritative source of truth.
+// gives `zlt_xloader version` a single, authoritative source of truth.
 package buildinfo
 
 import (
@@ -11,7 +11,7 @@ import (
 )
 
 // AppName is the product name shown in help output and release artifacts.
-const AppName = "zlt-unlocker"
+const AppName = "zlt_xloader"
 
 var (
 	// Version is the semantic version, e.g. v1.0.0. Defaults to "dev" for

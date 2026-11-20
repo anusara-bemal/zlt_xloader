@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in improving `zlt-unlocker`. Please read this file and
+Thanks for your interest in improving `zlt_xloader`. Please read this file and
 the disclaimer in [README.md](README.md) before you start.
 
 ## Ground rules
@@ -51,7 +51,7 @@ Useful targets: `make test`, `make cover`, `make fmt`, `make vet`,
    firmware version.
 2. Populate endpoints, login defaults, fingerprint keys and payloads from your
    own packet capture. Anonymise anything device-specific.
-3. Verify with `./zlt-unlocker --profile ./profiles/<new>.json --target <ip> scan`
+3. Verify with `./zlt_xloader --profile ./profiles/<new>.json --target <ip> scan`
    in dry-run mode.
 4. Document the firmware version and provenance in the profile `name` field.
 

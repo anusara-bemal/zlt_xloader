@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contributing — zlt_xloader docs</title>
+  <meta name="description" content="Development workflow, tests, profile corrections and community standards.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="theme-color" content="#f4f1ea">
+  <link rel="canonical" href="https://anusara-bemal.github.io/docs/contributing.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="zlt_xloader">
+  <meta property="og:title" content="Contributing — zlt_xloader docs">
+  <meta property="og:description" content="Development workflow, tests, profile corrections and community standards.">
+  <meta property="og:url" content="https://anusara-bemal.github.io/docs/contributing.html">
+  <meta property="og:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Contributing — zlt_xloader docs">
+  <meta name="twitter:description" content="Development workflow, tests, profile corrections and community standards.">
+  <meta name="twitter:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","name":"zlt_xloader","description":"Security research and device ownership toolkit for the Tozed ZLT S20 4G router.","applicationCategory":"SecurityApplication","operatingSystem":"Windows, Linux, macOS","programmingLanguage":"Go","codeRepository":"https://github.com/anusara-bemal/zlt_xloader","url":"https://anusara-bemal.github.io/","author":{"@type":"Person","name":"anusara-bemal"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"zlt_xloader","item":"https://anusara-bemal.github.io/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://anusara-bemal.github.io/docs/"},{"@type":"ListItem","position":3,"name":"Contributing","item":"https://anusara-bemal.github.io/docs/contributing.html"}]}]}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-head">
+    <div class="container head-inner">
+      <a class="brand" href="../index.html" aria-label="zlt_xloader home">
+        <img src="../assets/favicon.svg" alt="" width="26" height="26">
+        <span class="brand-name">zlt_xloader</span>
+        <span class="brand-ver">FIELD MANUAL / 1.0</span>
+      </a>
+
+      <nav aria-label="Primary">
+        <ul class="nav">
+          <li><a href="../index.html#paths">Access paths</a></li>
+          <li><a href="../index.html#gate">Write gate</a></li>
+          <li><a href="../index.html#variants">Variants</a></li>
+          <li><a href="../index.html#setup">Setup</a></li>
+          <li><a href="../index.html#commands">Commands</a></li>
+          <li><a href="index.html" aria-current="page">Docs ↗</a></li>
+        </ul>
+      </nav>
+
+      <div class="head-end">
+        <a class="head-link" href="https://github.com/anusara-bemal/zlt_xloader" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href="../index.html#setup">Get the binary</a>
+        <button id="menu-btn" class="menu-btn" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobile-nav">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
+      <ul>
+        <li><a href="../index.html#paths">Access paths</a></li>
+        <li><a href="../index.html#gate">Write gate</a></li>
+        <li><a href="../index.html#variants">Variants</a></li>
+        <li><a href="../index.html#setup">Setup</a></li>
+        <li><a href="../index.html#commands">Commands</a></li>
+        <li><a href="../index.html#safety">Safety &amp; legal</a></li>
+        <li><a href="index.html">Documentation ↗</a></li>
+      </ul>
+    </nav>
+  </header>
+<main id="main"><div class="container doc-shell">
+    <aside class="doc-sidebar" aria-label="Documentation navigation"><div class="doc-sidebar-group"><div class="doc-sidebar-label">Getting started</div><ul><li><a href="introduction.html">Introduction</a></li><li><a href="disclaimer.html">Disclaimer &amp; safety model</a></li><li><a href="installation.html">Installation</a></li><li><a href="quickstart.html">Quickstart</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Command reference</div><ul><li><a href="commands-recon.html">Recon</a></li><li><a href="commands-access.html">Access &amp; shell</a></li><li><a href="commands-unlock.html">Unlock &amp; optimise</a></li><li><a href="commands-advanced.html">Advanced</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Guides</div><ul><li><a href="profiles.html">Device profiles</a></li><li><a href="how-it-works.html">How it works</a></li><li><a href="hardware.html">Hardware notes</a></li><li><a href="faq.html">FAQ</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Project</div><ul><li><a href="contributing.html" aria-current="page">Contributing</a></li><li><a href="changelog.html">Changelog</a></li></ul></div></aside>
+    <article class="doc-main">
+      <h1>Contributing</h1>
+      <p class="doc-lead">Development workflow, tests, profile corrections and community standards.</p>
+      <div class="prose"><p>Contributions are welcome. Read <code>CONTRIBUTING.md</code> and <code>CODE_OF_CONDUCT.md</code> in the repository before opening a pull request.</p>
+<h2 id="ground-rules">Ground rules</h2>
+<ul><li>Keep device-specific constants in profiles, not in Go source.</li><li>Add tests for new parsers and protocol code.</li><li>Never submit captured personal data — IMEIs, serials, phone numbers or session tokens.</li><li>Run <code>make check</code> before opening a PR.</li></ul>
+<h2 id="local-workflow">Local workflow</h2>
+<pre><code class="language-bash">git clone https://github.com/anusara-bemal/zlt_xloader.git
+cd zlt_xloader
+
+make check     # gofmt, go vet, go test
+make cover     # coverage report</code></pre>
+<h2 id="useful-targets">Useful targets</h2>
+<table><thead><tr><th>Target</th><th>Purpose</th></tr></thead><tbody><tr><td><code>make check</code></td><td>Format, vet and test the whole module.</td></tr>
+<tr><td><code>make ci</code></td><td>The full CI-equivalent check.</td></tr>
+<tr><td><code>make cover</code></td><td>Generate a coverage report.</td></tr>
+<tr><td><code>make snapshot</code></td><td>Local GoReleaser snapshot build.</td></tr>
+<tr><td><code>make build-all VERSION=v1.0.0</code></td><td>Cross-compile the release matrix.</td></tr></tbody></table>
+<h2 id="reporting-problems">Reporting problems</h2>
+<ul><li><strong>Bugs:</strong> open an issue with the firmware version, profile, target platform and the exact command. Redact identifiers.</li><li><strong>Security issues:</strong> follow <code>SECURITY.md</code> and report privately.</li><li><strong>Profile corrections:</strong> include the observed request/response shape and explain how you verified it. Mark whether a value is confirmed against firmware source or only black-box reported.</li></ul>
+<h2 id="licence-and-attribution">Licence and attribution</h2>
+<p>Copyright (c) 2026 anusara-bemal. All rights reserved. This is a proprietary project; no licence to use, copy, modify or distribute the source is granted except by a separate written agreement. See <code>LICENSE</code> and <code>NOTICE</code> in the repository for full terms and third-party attribution.</p></div>
+      <p class="hint-inline">Last reviewed: 2026-11-20</p>
+      <nav class="doc-pager" aria-label="Documentation pages"><a href="faq.html"><span>← Previous</span><strong>FAQ</strong></a><a href="changelog.html"><span>Next →</span><strong>Changelog</strong></a></nav>
+    </article>
+    <aside class="doc-toc" aria-label="On this page"><div class="doc-toc-label">On this page</div><nav><ul><li class="depth-2"><a href="#ground-rules">Ground rules</a></li><li class="depth-2"><a href="#local-workflow">Local workflow</a></li><li class="depth-2"><a href="#useful-targets">Useful targets</a></li><li class="depth-2"><a href="#reporting-problems">Reporting problems</a></li><li class="depth-2"><a href="#licence-and-attribution">Licence and attribution</a></li></ul></nav></aside>
+  </div></main>
+  <footer class="site-foot">
+    <div class="container foot-grid">
+      <div>
+        <a class="brand" href="../index.html"><img src="../assets/favicon.svg" alt="" width="26" height="26"><span class="brand-name">zlt_xloader</span></a>
+        <p>Security research and device ownership for the Tozed ZLT S20. For lawful use on hardware you own.</p>
+      </div>
+      <div class="foot-col"><h5>Docs</h5><ul><li><a href="index.html">Index</a></li><li><a href="disclaimer.html">Disclaimer</a></li><li><a href="quickstart.html">Quickstart</a></li></ul></div>
+      <div class="foot-col"><h5>Project</h5><ul><li><a href="../index.html#paths">Features</a></li><li><a href="changelog.html">Changelog</a></li><li><a href="contributing.html">Contributing</a></li></ul></div>
+      <div class="foot-col"><h5>Reference</h5><ul><li><a href="how-it-works.html">How it works</a></li><li><a href="hardware.html">Hardware notes</a></li><li><a href="faq.html">FAQ</a></li></ul></div>
+    </div>
+    <div class="container foot-bottom"><div>Copyright © 2026 anusara-bemal. All rights reserved.</div><div>Educational use only — do not misuse.</div></div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

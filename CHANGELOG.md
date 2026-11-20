@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tag-triggered release workflow with GoReleaser, producing checksummed
   archives for Linux, Windows and macOS.
 - Centralised build metadata in `internal/buildinfo`, injected by the Makefile
-  and GoReleaser; `zlt-unlocker version` now reports version, commit and date.
+  and GoReleaser; `zlt_xloader version` now reports version, commit and date.
 - `make check`, `make ci`, `make cover`, `make snapshot` and `make release`
   targets.
 - Prominent educational-use-only / do-not-misuse warning in the README, CLI

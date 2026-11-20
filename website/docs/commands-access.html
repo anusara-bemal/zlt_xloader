@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Access commands — zlt_xloader docs</title>
+  <meta name="description" content="telnet, shell, persist and download — obtaining and keeping a root shell, and moving files.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="theme-color" content="#f4f1ea">
+  <link rel="canonical" href="https://anusara-bemal.github.io/docs/commands-access.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="zlt_xloader">
+  <meta property="og:title" content="Access commands — zlt_xloader docs">
+  <meta property="og:description" content="telnet, shell, persist and download — obtaining and keeping a root shell, and moving files.">
+  <meta property="og:url" content="https://anusara-bemal.github.io/docs/commands-access.html">
+  <meta property="og:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Access commands — zlt_xloader docs">
+  <meta name="twitter:description" content="telnet, shell, persist and download — obtaining and keeping a root shell, and moving files.">
+  <meta name="twitter:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","name":"zlt_xloader","description":"Security research and device ownership toolkit for the Tozed ZLT S20 4G router.","applicationCategory":"SecurityApplication","operatingSystem":"Windows, Linux, macOS","programmingLanguage":"Go","codeRepository":"https://github.com/anusara-bemal/zlt_xloader","url":"https://anusara-bemal.github.io/","author":{"@type":"Person","name":"anusara-bemal"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"zlt_xloader","item":"https://anusara-bemal.github.io/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://anusara-bemal.github.io/docs/"},{"@type":"ListItem","position":3,"name":"Access commands","item":"https://anusara-bemal.github.io/docs/commands-access.html"}]}]}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-head">
+    <div class="container head-inner">
+      <a class="brand" href="../index.html" aria-label="zlt_xloader home">
+        <img src="../assets/favicon.svg" alt="" width="26" height="26">
+        <span class="brand-name">zlt_xloader</span>
+        <span class="brand-ver">FIELD MANUAL / 1.0</span>
+      </a>
+
+      <nav aria-label="Primary">
+        <ul class="nav">
+          <li><a href="../index.html#paths">Access paths</a></li>
+          <li><a href="../index.html#gate">Write gate</a></li>
+          <li><a href="../index.html#variants">Variants</a></li>
+          <li><a href="../index.html#setup">Setup</a></li>
+          <li><a href="../index.html#commands">Commands</a></li>
+          <li><a href="index.html" aria-current="page">Docs ↗</a></li>
+        </ul>
+      </nav>
+
+      <div class="head-end">
+        <a class="head-link" href="https://github.com/anusara-bemal/zlt_xloader" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href="../index.html#setup">Get the binary</a>
+        <button id="menu-btn" class="menu-btn" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobile-nav">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
+      <ul>
+        <li><a href="../index.html#paths">Access paths</a></li>
+        <li><a href="../index.html#gate">Write gate</a></li>
+        <li><a href="../index.html#variants">Variants</a></li>
+        <li><a href="../index.html#setup">Setup</a></li>
+        <li><a href="../index.html#commands">Commands</a></li>
+        <li><a href="../index.html#safety">Safety &amp; legal</a></li>
+        <li><a href="index.html">Documentation ↗</a></li>
+      </ul>
+    </nav>
+  </header>
+<main id="main"><div class="container doc-shell">
+    <aside class="doc-sidebar" aria-label="Documentation navigation"><div class="doc-sidebar-group"><div class="doc-sidebar-label">Getting started</div><ul><li><a href="introduction.html">Introduction</a></li><li><a href="disclaimer.html">Disclaimer &amp; safety model</a></li><li><a href="installation.html">Installation</a></li><li><a href="quickstart.html">Quickstart</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Command reference</div><ul><li><a href="commands-recon.html">Recon</a></li><li><a href="commands-access.html" aria-current="page">Access &amp; shell</a></li><li><a href="commands-unlock.html">Unlock &amp; optimise</a></li><li><a href="commands-advanced.html">Advanced</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Guides</div><ul><li><a href="profiles.html">Device profiles</a></li><li><a href="how-it-works.html">How it works</a></li><li><a href="hardware.html">Hardware notes</a></li><li><a href="faq.html">FAQ</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Project</div><ul><li><a href="contributing.html">Contributing</a></li><li><a href="changelog.html">Changelog</a></li></ul></div></aside>
+    <article class="doc-main">
+      <h1>Access commands</h1>
+      <p class="doc-lead">telnet, shell, persist and download — obtaining and keeping a root shell, and moving files.</p>
+      <div class="prose"><div class="doc-command" id="telnet"><div class="doc-command__head"><h3 class="doc-command__name">telnet</h3><span class="doc-command__tag">mutating</span></div><div class="doc-command__body"><p>Tries the known telnet/ADB payloads in order and verifies port 23. The working method     is a command injection in the <code>ids</code> field of the <code>REMOVE_WHITE_SITE</code>     goform, which runs <code>/bin/busybox telnetd -l /bin/sh</code> on the router.     <code>TZ_CMD_SECURE_LOGIN</code> is kept as a fallback.  The firmware's <code>sha256()</code> returns a hex string that is then Base64-encoded,     and every command needs <code>isTest=false</code>. Both are handled automatically.</p><pre><code>./zlt_xloader --dry-run=false telnet</code></pre></div></div>
+<div class="doc-callout"><strong>Runtime only</strong><p>The <code>telnetd</code> started by this command does not survive a reboot. Use   <code>persist</code> or rerun the command after restarting the router.</p></div>
+<div class="doc-command" id="shell"><div class="doc-command__head"><h3 class="doc-command__name">shell</h3><span class="doc-command__tag">interactive</span></div><div class="doc-command__body"><p>Interactive root shell over telnet or SSH. Telnet is enabled automatically if the port     is closed. The client handles Telnet IAC negotiation.</p><pre><code>./zlt_xloader shell</code></pre><table><tbody><tr><td>--ssh</td><td>Use SSH instead of telnet (credentials from the active profile).</td></tr>
+<tr><td>--user / --password</td><td>Override SSH credentials.</td></tr>
+<tr><td>--command</td><td>Run one command instead of opening a session.</td></tr>
+<tr><td>--at</td><td>Send the command as a raw AT command via /bin/at_cmd.</td></tr></tbody></table></div></div>
+<pre><code class="language-bash">./zlt_xloader shell --command "nv get sim_plmn"
+./zlt_xloader shell --at --command "AT+CSQ"
+./zlt_xloader --target 192.168.1.1 shell --ssh</code></pre>
+<div class="doc-command" id="persist"><div class="doc-command__head"><h3 class="doc-command__name">persist</h3><span class="doc-command__tag">mutating</span></div><div class="doc-command__body"><p>Appends a small block to <code>/etc/rc</code> so BusyBox telnetd (23) and dropbear (22)     start at every boot, and sets the firmware's <code>telnetd_enable</code>,     <code>adbd_enable</code> and <code>dropbear_enable</code> NVRAM flags. The original boot     script is backed up to <code>/etc/rc.zlt-backup</code>. The command is idempotent.  On this firmware, ADB binds only <code>127.0.0.1:5037</code> (host mode) and needs USB;     network ADB on 5555 is not available without additional firmware support.</p><pre><code>./zlt_xloader --dry-run=false --yes persist --reboot</code></pre><table><tbody><tr><td>--reboot</td><td>Reboot the router after applying the change.</td></tr></tbody></table></div></div>
+<div class="doc-command" id="download"><div class="doc-command__head"><h3 class="doc-command__name">download</h3><span class="doc-command__tag">mutating</span></div><div class="doc-command__body"><p>Exports a file from the router through a local HTTP endpoint: the tool starts a local     server and runs <code>curl -T</code> from the router shell. The same approach is used     by the reference project.</p><pre><code>./zlt_xloader --dry-run=false --yes download --remote /etc_ro/default/default_parameter_sys --local ./config.txt</code></pre><table><tbody><tr><td>--remote</td><td>Path of the file on the router.</td></tr>
+<tr><td>--local</td><td>Destination path on this machine.</td></tr></tbody></table></div></div>
+<div class="doc-callout doc-callout--warn"><strong>Windows / Git Bash</strong><p>MSYS converts Unix-style arguments such as <code>/etc_ro/...</code> into Windows paths.   Prefix the command with <code>MSYS_NO_PATHCONV=1</code> when using <code>--remote</code>.</p></div></div>
+      <p class="hint-inline">Last reviewed: 2026-11-20</p>
+      <nav class="doc-pager" aria-label="Documentation pages"><a href="commands-recon.html"><span>← Previous</span><strong>Recon</strong></a><a href="commands-unlock.html"><span>Next →</span><strong>Unlock &amp; optimise</strong></a></nav>
+    </article>
+    
+  </div></main>
+  <footer class="site-foot">
+    <div class="container foot-grid">
+      <div>
+        <a class="brand" href="../index.html"><img src="../assets/favicon.svg" alt="" width="26" height="26"><span class="brand-name">zlt_xloader</span></a>
+        <p>Security research and device ownership for the Tozed ZLT S20. For lawful use on hardware you own.</p>
+      </div>
+      <div class="foot-col"><h5>Docs</h5><ul><li><a href="index.html">Index</a></li><li><a href="disclaimer.html">Disclaimer</a></li><li><a href="quickstart.html">Quickstart</a></li></ul></div>
+      <div class="foot-col"><h5>Project</h5><ul><li><a href="../index.html#paths">Features</a></li><li><a href="changelog.html">Changelog</a></li><li><a href="contributing.html">Contributing</a></li></ul></div>
+      <div class="foot-col"><h5>Reference</h5><ul><li><a href="how-it-works.html">How it works</a></li><li><a href="hardware.html">Hardware notes</a></li><li><a href="faq.html">FAQ</a></li></ul></div>
+    </div>
+    <div class="container foot-bottom"><div>Copyright © 2026 anusara-bemal. All rights reserved.</div><div>Educational use only — do not misuse.</div></div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

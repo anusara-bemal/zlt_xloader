@@ -116,7 +116,7 @@ from the router; the command reports the measured state honestly.`,
 		}
 
 		// Persist the tunings across reboots through the existing boot hook.
-		marker := "# zlt-unlocker network tuning"
+		marker := "# zlt_xloader network tuning"
 		check, err := client.Run("grep -c '"+marker+"' /etc/rc", "# ", 4*time.Second)
 		if err == nil && !strings.Contains(check, "1") && !app.DryRun {
 			hook := []string{

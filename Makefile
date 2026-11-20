@@ -1,4 +1,4 @@
-BINARY     := zlt-unlocker
+BINARY     := zlt_xloader
 PKG        := github.com/anusara-bemal/zlt_xloader
 VERSION    ?= dev
 COMMIT     ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo none)

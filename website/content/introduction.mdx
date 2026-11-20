@@ -1,0 +1,43 @@
+---
+title: Introduction
+description: What zlt_xloader is, which devices it targets, and why it exists.
+order: 1
+section: Getting started
+updated: "2026-11-20"
+---
+
+zlt_xloader is a security-research and device-ownership toolkit for the **Tozed ZLT S20 4G router** and closely related firmware variants. It is a single Go binary that runs on Windows, Linux and macOS.
+
+Standard ZTE tooling (`zteOnu`, `factorymode_crack` and similar) does not work on this device because Tozed uses a different web API. This project targets the Tozed-specific endpoints directly.
+
+## What it does
+
+The toolkit covers the full lifecycle of a research session on a device you own:
+
+- **Fingerprint** the router — open ports, model, firmware build and the configured ACS URL.
+- **Authenticate** to the web UI using the same login and CSRF sequence as the firmware's own JavaScript.
+- **Obtain a root shell** over telnet or SSH, and optionally make it survive a reboot.
+- **Inspect and modify** NVRAM-backed settings: carrier locks, hidden UI pages, DNS and data-cap flags.
+- **Reverse the management channel** with a local TR-069 ACS simulator.
+- **Work at the hardware level** using a 3.3V UART adapter and raw AT commands.
+- **Analyse `config.bin`** offline: container structure, entropy and candidate keys.
+
+## Design principles
+
+| Principle | What it means in practice |
+| --- | --- |
+| Dry-run by default | Mutating commands send nothing until you pass `--dry-run=false`. |
+| Confirmation gates | Destructive RPCs and NVRAM writes require an interactive prompt or `--yes`. |
+| Data, not patches | Endpoints, IDs, salts and AT commands live in an editable JSON profile. |
+| Explicit verification | "Verified" behaviour was confirmed against the firmware's `service.js`; "reported" behaviour comes from black-box testing. |
+| Portable | One static Go binary per platform, with checksummed release archives. |
+
+## Supported variants
+
+The default profile targets `S20_1.12.7` (Dialog / SLT-Mobitel). Additional profiles ship for the MTN `S20_1.13.6` and ORG `S20_1.02.7` variants, each with its own fingerprint commands, payload sets and unlock parameters.
+
+See [Installation](/docs/installation/) to get a binary, then [Quickstart](/docs/quickstart/) for a first read-only session.
+
+## Project status
+
+The toolkit is functional and tested: `go test ./...`, `go vet ./...`, `gofmt` and the full cross-compile matrix pass. Version information is available with `zlt_xloader version`. Security issues should be reported privately through the project's `SECURITY.md`, not in a public issue.

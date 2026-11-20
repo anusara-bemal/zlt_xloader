@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="docs/assets/logo.png" alt="zlt-unlocker logo" width="92" />
+<img src="docs/assets/logo.png" alt="zlt_xloader logo" width="92" />
 
-<h1>zlt-unlocker</h1>
+<h1>zlt_xloader</h1>
 
 <p>
   <strong>A professional security-research &amp; device-ownership toolkit for the Tozed ZLT S20 4G router.</strong><br />
@@ -37,7 +37,7 @@ A security-research and device-ownership toolkit for the **Tozed ZLT S20 4G rout
 
 Standard ZTE tooling (`zteOnu`, `factorymode_crack`, …) does not work on this device because Tozed uses a different web API. This tool targets the Tozed-specific endpoints directly.
 
-**Repository:** `github.com/anusara-bemal/zlt_xloader` — the Go module path matches this repository. The shipped binary is named `zlt-unlocker`.
+**Repository:** `github.com/anusara-bemal/zlt_xloader` — the Go module path matches this repository. The shipped binary is named `zlt_xloader`.
 
 ## Contents
 
@@ -120,14 +120,14 @@ Global flags: `--target`, `--timeout`, `--profile`, `--dry-run`, `--verbose`, `-
 Pre-built, checksummed archives for Linux, Windows and macOS are published on
 the [Releases page](https://github.com/anusara-bemal/zlt_xloader/releases).
 Download the archive for your platform, verify it against the published
-`checksums.txt`, and run the `zlt-unlocker` binary inside it.
+`checksums.txt`, and run the `zlt_xloader` binary inside it.
 
 ### From source
 
 ```bash
 git clone https://github.com/anusara-bemal/zlt_xloader.git
 cd zlt_xloader
-go build -o zlt-unlocker .
+go build -o zlt_xloader .
 ```
 
 Requires Go 1.22 or newer.
@@ -149,10 +149,10 @@ Supported targets: Windows (amd64, 386), Linux (amd64, arm64, armv7), macOS (amd
 
 ```bash
 # Dry-run is irrelevant for read-only scan; it still fingerprints the device.
-./zlt-unlocker --target 192.168.1.1 scan
+./zlt_xloader --target 192.168.1.1 scan
 
 # Custom port list
-./zlt-unlocker scan --ports 23,80,8080,7547,443
+./zlt_xloader scan --ports 23,80,8080,7547,443
 ```
 
 Example output:
@@ -176,19 +176,19 @@ Target: 192.168.1.1  (profile: Tozed ZLT S20 1.12.7 (Dialog / SLT-Mobitel))
 
 ```bash
 # Preview only — nothing is sent to the router
-./zlt-unlocker api-exploit
+./zlt_xloader api-exploit
 
 # Log in as admin/admin, sweep profile payloads, save hits
-./zlt-unlocker --dry-run=false api-exploit --username admin --password admin --output hits.json
+./zlt_xloader --dry-run=false api-exploit --username admin --password admin --output hits.json
 
 # Add the verified built-in corpus from service.js, slow down to 50ms per worker
-./zlt-unlocker --dry-run=false api-exploit --include-builtin --rate 50ms
+./zlt_xloader --dry-run=false api-exploit --include-builtin --rate 50ms
 
 # Smart fuzzer: generate PLMN/SIM/unlock/NVRAM candidates (asks for confirmation)
-./zlt-unlocker --dry-run=false --yes api-exploit --fuzz --fuzz-max 300 --workers 8
+./zlt_xloader --dry-run=false --yes api-exploit --fuzz --fuzz-max 300 --workers 8
 
 # Only generated fuzz payloads, with a custom keyword
-./zlt-unlocker --dry-run=false --yes api-exploit --fuzz-only --fuzz-keywords plmn,lock,unlock
+./zlt_xloader --dry-run=false --yes api-exploit --fuzz-only --fuzz-keywords plmn,lock,unlock
 ```
 
 All POSTs go to `/reqproc/proc_post` with `Content-Type: application/x-www-form-urlencoded`; reads go to `/reqproc/proc_get`. `CSRFToken` is sent in the form data (and as a header) exactly as `service.js` does.
@@ -201,10 +201,10 @@ Every response that is **not** `{"result":"failure"}` is reported as a hit. Unex
 
 ```bash
 # Preview
-./zlt-unlocker telnet
+./zlt_xloader telnet
 
 # Actually try the payload chain and check port 23
-./zlt-unlocker --dry-run=false telnet
+./zlt_xloader --dry-run=false telnet
 ```
 
 The working method is a command injection in the `ids` field of the
@@ -218,10 +218,10 @@ returns a hex string which is then Base64-encoded, and every command needs
 
 ```bash
 # Preview
-./zlt-unlocker unlock
+./zlt_xloader unlock
 
 # Apply (backs up NVRAM on the router first)
-./zlt-unlocker --dry-run=false --yes unlock --reboot
+./zlt_xloader --dry-run=false --yes unlock --reboot
 ```
 
 This uses the same `REMOVE_WHITE_SITE` injection as `telnet` to run `nv set`
@@ -231,16 +231,16 @@ commands as root. It clears `tz_lock_plmn_state`, `tz_lock_plmn_list`,
 parameter files so the change survives a factory reset.
 
 A backup of the original NVRAM is written to
-`/tmp/zlt-unlocker-nv-backup.txt` on the router. Verify with
+`/tmp/zlt_xloader-nv-backup.txt` on the router. Verify with
 `nv get tz_lock_plmn_state` over telnet — it should print `no`.
 
-> `telnetd` started by `zlt-unlocker telnet` is runtime-only. After a reboot,
+> `telnetd` started by `zlt_xloader telnet` is runtime-only. After a reboot,
 > rerun that command to restore shell access.
 
 ### 2c-2. Make telnet and SSH permanent
 
 ```bash
-./zlt-unlocker --dry-run=false --yes persist --reboot
+./zlt_xloader --dry-run=false --yes persist --reboot
 ```
 
 This appends a small block to the router's boot script `/etc/rc` to start
@@ -255,7 +255,7 @@ network ADB on 5555 is not available without additional firmware support.
 ### 2c-3. Reveal hidden web UI pages
 
 ```bash
-./zlt-unlocker --dry-run=false --yes unhide --reboot
+./zlt_xloader --dry-run=false --yes unhide --reboot
 ```
 
 The SLT/Dialog firmware hides pages with three NVRAM bitfields:
@@ -271,7 +271,7 @@ render even after the flags are enabled; the API itself still responds.
 ### 2c-4. Connection optimization
 
 ```bash
-./zlt-unlocker --dry-run=false --yes optimize --reboot
+./zlt_xloader --dry-run=false --yes optimize --reboot
 ```
 
 Prints live RF diagnostics (band, bandwidth, RSRP/RSRQ/SINR, PCI, SIM PLMN)
@@ -286,28 +286,28 @@ so remaining latency is in the operator's network, not the air interface.
 
 ```bash
 # Interactive root shell (telnet is enabled automatically if closed)
-./zlt-unlocker shell
+./zlt_xloader shell
 
 # One-off command, or a raw AT command
-./zlt-unlocker shell --command "nv get sim_plmn"
-./zlt-unlocker shell --at --command "AT+CSQ"
+./zlt_xloader shell --command "nv get sim_plmn"
+./zlt_xloader shell --at --command "AT+CSQ"
 
 # Device / SIM / lock / signal status
-./zlt-unlocker status
+./zlt_xloader status
 
 # Power controls (destructive, need confirmation)
-./zlt-unlocker --dry-run=false --yes power reboot
-./zlt-unlocker --dry-run=false --yes power off
+./zlt_xloader --dry-run=false --yes power reboot
+./zlt_xloader --dry-run=false --yes power off
 
 # SMS
-./zlt-unlocker --dry-run=false sms list
-./zlt-unlocker --dry-run=false sms send --to 0771234567 --message "hello"
+./zlt_xloader --dry-run=false sms list
+./zlt_xloader --dry-run=false sms send --to 0771234567 --message "hello"
 
 # USSD
-./zlt-unlocker --dry-run=false ussd --code '*#123#'
+./zlt_xloader --dry-run=false ussd --code '*#123#'
 
 # Export a file from the router to this machine
-./zlt-unlocker --dry-run=false --yes download \
+./zlt_xloader --dry-run=false --yes download \
     --remote /etc_ro/default/default_parameter_sys --local ./config.txt
 ```
 
@@ -326,14 +326,14 @@ used by the reference project.
 
 ```bash
 # Interactive SSH root shell (uses the active profile's credentials by default)
-./zlt-unlocker --target 192.168.1.1 shell --ssh
+./zlt_xloader --target 192.168.1.1 shell --ssh
 
 # One command over SSH with explicit credentials
-./zlt-unlocker shell --ssh --user admin --password admin --command "nv get sim_plmn"
+./zlt_xloader shell --ssh --user admin --password admin --command "nv get sim_plmn"
 
 # Other firmware variants ship their own profiles
-./zlt-unlocker --profile ./profiles/zlt_m910w_1.13.6_mtn.json scan
-./zlt-unlocker --profile ./profiles/zlt_s20_1.02.7_org.json status
+./zlt_xloader --profile ./profiles/zlt_m910w_1.13.6_mtn.json scan
+./zlt_xloader --profile ./profiles/zlt_s20_1.02.7_org.json status
 ```
 
 The MTN (`S20_1.13.6`) and ORG (`S20_1.02.7`) profiles carry their own
@@ -344,14 +344,14 @@ correct NVRAM/AT keys for those firmware variants.
 
 ```bash
 # Preview: ACS answers Inform but suppresses all RPCs
-./zlt-unlocker tr069-exploit --rpc set-params --param InternetGatewayDevice.ManagementServer.URL --value http://192.168.1.2:7547/acs
+./zlt_xloader tr069-exploit --rpc set-params --param InternetGatewayDevice.ManagementServer.URL --value http://192.168.1.2:7547/acs
 
 # Real push with local config file; requires confirmation
-./zlt-unlocker tr069-exploit --dry-run=false --yes \
+./zlt_xloader tr069-exploit --dry-run=false --yes \
     --rpc download --serve-file ./unlock-config.bin
 
 # Push the local ACS URL to the router automatically via setTR069Config
-./zlt-unlocker --dry-run=false --yes tr069-exploit --set-acs \
+./zlt_xloader --dry-run=false --yes tr069-exploit --set-acs \
     --rpc set-params --param InternetGatewayDevice.ManagementServer.URL \
     --value http://192.168.1.2:7547/acs
 ```
@@ -363,16 +363,16 @@ or let `--set-acs` push it with the `setTR069Config` goform and restart TR-069.
 
 ```bash
 # List serial ports
-./zlt-unlocker uart-at --list
+./zlt_xloader uart-at --list
 
 # Preview the scripted AT sequence (no port is opened)
-./zlt-unlocker uart-at --port COM3 --script
+./zlt_xloader uart-at --port COM3 --script
 
 # Verify the AT engine end-to-end with an in-memory mock serial device
-./zlt-unlocker uart-at --simulate --script
+./zlt_xloader uart-at --simulate --script
 
 # Send one raw command for real
-./zlt-unlocker uart-at --dry-run=false --yes \
+./zlt_xloader uart-at --dry-run=false --yes \
     --port COM3 --command 'AT+CLCK="PN",0' --expect OK
 ```
 
@@ -382,10 +382,10 @@ or let `--set-acs` push it with the `setTR069Config` goform and restart TR-069.
 
 ```bash
 # Entropy / container report plus heuristic key search
-./zlt-unlocker config-decrypt --file ./config.bin --top 10 --serial <SERIAL> --imei <IMEI>
+./zlt_xloader config-decrypt --file ./config.bin --top 10 --serial <SERIAL> --imei <IMEI>
 
 # Decrypt with a known key
-./zlt-unlocker config-decrypt --file ./config.bin --key 0011223344556677 --algo des-cbc --out config.dec.bin --dry-run=false
+./zlt_xloader config-decrypt --file ./config.bin --key 0011223344556677 --algo des-cbc --out config.dec.bin --dry-run=false
 ```
 
 ---
@@ -456,7 +456,7 @@ Copy `profiles/zlt_s20_1.12.7.json` and pass it with `--profile`. Useful fields:
   "uart": { "port": "COM3", "baud": 115200 },
   "crypto": { "known_keys": [ /* keys found in firmware */ ] },
   "unlock": {
-    "backup_path": "/tmp/zlt-unlocker-nv-backup.txt",
+    "backup_path": "/tmp/zlt_xloader-nv-backup.txt",
     "save": true,
     "nv": [ { "key": "tz_lock_plmn_state", "value": "no", "path": "/etc_ro/default/default_parameter_sys" } ],
     "at": [ { "key": "tz_lock_plmn_state", "value": "no", "path": "" } ]

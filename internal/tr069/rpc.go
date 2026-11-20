@@ -37,7 +37,7 @@ func SetParameterValues(params []Parameter, key string) string {
 // Download asks the CPE to fetch a firmware/config image from url.
 func Download(url, username, password string, fileSize int64) string {
 	return fmt.Sprintf(
-		`<cwmp:Download><CommandKey>zlt-unlocker</CommandKey>`+
+		`<cwmp:Download><CommandKey>zlt_xloader</CommandKey>`+
 			`<FileType>1 Firmware Upgrade Image</FileType>`+
 			`<URL>%s</URL><Username>%s</Username><Password>%s</Password>`+
 			`<FileSize>%d</FileSize></cwmp:Download>`,
@@ -47,5 +47,5 @@ func Download(url, username, password string, fileSize int64) string {
 
 // Reboot asks the CPE to reboot after the configuration push.
 func Reboot() string {
-	return `<cwmp:Reboot><CommandKey>zlt-unlocker</CommandKey></cwmp:Reboot>`
+	return `<cwmp:Reboot><CommandKey>zlt_xloader</CommandKey></cwmp:Reboot>`
 }

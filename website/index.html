@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>zlt_xloader — Field Manual for the Tozed ZLT S20</title>
+  <meta name="description" content="A security-research and device-ownership toolkit for the Tozed ZLT S20 4G router. Firmware fingerprinting, root shell access, TR-069 role reversal and profile-driven unlocking from one Go binary.">
+  <meta name="author" content="anusara-bemal">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="theme-color" content="#f4f1ea">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="zlt_xloader">
+  <meta property="og:title" content="zlt_xloader — Field Manual for the Tozed ZLT S20">
+  <meta property="og:description" content="One Go binary. Four ways into the device. Dry-run by default. Educational use only.">
+  <meta property="og:url" content="https://anusara-bemal.github.io/">
+  <meta property="og:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <meta property="og:image:alt" content="zlt_xloader field manual">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="zlt_xloader — Field Manual for the Tozed ZLT S20">
+  <meta name="twitter:description" content="One Go binary. Four ways into the device. Dry-run by default.">
+  <meta name="twitter:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <link rel="canonical" href="https://anusara-bemal.github.io/">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "zlt_xloader",
+        "description": "Security research and device ownership toolkit for the Tozed ZLT S20 4G router.",
+        "applicationCategory": "SecurityApplication",
+        "operatingSystem": "Windows, Linux, macOS",
+        "programmingLanguage": "Go",
+        "codeRepository": "https://github.com/anusara-bemal/zlt_xloader",
+        "url": "https://anusara-bemal.github.io/",
+        "author": { "@type": "Person", "name": "anusara-bemal" },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "Is zlt_xloader legal to use?", "acceptedAnswer": { "@type": "Answer", "text": "It is intended for lawful security research and devices you own or are explicitly authorised to test. Unlocking a carrier lock may breach a service contract or local law." } },
+          { "@type": "Question", "name": "Does zlt_xloader change the router by default?", "acceptedAnswer": { "@type": "Answer", "text": "No. Every mutating action defaults to dry-run mode. Nothing is written unless you explicitly pass --dry-run=false, and destructive operations require confirmation." } },
+          { "@type": "Question", "name": "Does telnet stay enabled after a reboot?", "acceptedAnswer": { "@type": "Answer", "text": "No. The daemon started by the telnet command is runtime-only. Use persist to start telnet and SSH at every boot, or rerun the command after restarting." } }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-head">
+    <div class="container head-inner">
+      <a class="brand" href="#top" aria-label="zlt_xloader home">
+        <img src="assets/favicon.svg" alt="" width="26" height="26">
+        <span class="brand-name">zlt_xloader</span>
+        <span class="brand-ver">FIELD MANUAL / 1.0</span>
+      </a>
+
+      <nav aria-label="Primary">
+        <ul class="nav">
+          <li><a href="#paths">Access paths</a></li>
+          <li><a href="#gate">Write gate</a></li>
+          <li><a href="#variants">Variants</a></li>
+          <li><a href="#setup">Setup</a></li>
+          <li><a href="#commands">Commands</a></li>
+          <li><a href="docs/index.html">Docs ↗</a></li>
+        </ul>
+      </nav>
+
+      <div class="head-end">
+        <a class="head-link" href="https://github.com/anusara-bemal/zlt_xloader" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href="#setup">Get the binary</a>
+        <button id="menu-btn" class="menu-btn" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobile-nav">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
+      <ul>
+        <li><a href="#paths">Access paths</a></li>
+        <li><a href="#gate">Write gate</a></li>
+        <li><a href="#variants">Variants</a></li>
+        <li><a href="#setup">Setup</a></li>
+        <li><a href="#commands">Commands</a></li>
+        <li><a href="#safety">Safety &amp; legal</a></li>
+        <li><a href="docs/index.html">Documentation ↗</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section id="top" class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="kicker">Tozed ZLT S20 · security research</div>
+          <h1>One binary.<br>Four ways <em>in.</em></h1>
+          <p class="hero-lede">
+            zlt_xloader is a profile-driven toolkit for the Tozed ZLT S20 4G router.
+            Read the firmware, reach a root shell, take over the TR-069 channel or talk to
+            the serial console — with a write gate that refuses to touch the device until you say so.
+          </p>
+          <div class="hero-actions">
+            <a class="btn" href="#setup">Get the binary</a>
+            <a class="btn btn--ghost" href="#commands">Browse the commands</a>
+          </div>
+          <div class="spec-line">
+            <span>Firmware<strong>S20_1.12.7</strong></span>
+            <span>Binary<strong>Go 1.22+</strong></span>
+            <span>Platforms<strong>Win / Linux / macOS</strong></span>
+            <span>Default<strong>--dry-run=true</strong></span>
+          </div>
+        </div>
+
+        <div class="device-plate" aria-label="Relevant TCP ports on the Tozed ZLT S20">
+          <div class="plate-head"><span>Port map</span><span>Fig. 01</span></div>
+          <div class="plate-ports">
+            <span><b>23</b>telnet / root shell</span>
+            <span><b>80</b>web UI / web API</span>
+            <span><b>8080</b>alternate HTTP</span>
+            <span><b>7547</b>TR-069 / ACS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Real capture -->
+    <section class="container capture" aria-label="Real CLI output">
+      <div class="capture-frame">
+        <div class="capture-bar"><span>zlt_xloader · scan · captured output</span><b>dry_run: true</b></div>
+        <img src="assets/cli.png" alt="Real terminal output from zlt_xloader scanning TCP ports and fingerprinting a device" width="1200" height="611" loading="lazy" decoding="async">
+      </div>
+      <p class="capture-note">Captured from the shipped binary: <code>./zlt_xloader --target 127.0.0.1 scan --ports 23,80,8080,7547</code> against a local test host — not a mockup.</p>
+    </section>
+
+    <!-- Access paths -->
+    <section id="paths" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-no">01 / MODEL</span>
+          <div>
+            <h2>Four ways into the same router</h2>
+            <p>Each path reaches the device independently. Start with the read-only one, then move down only as far as you need to.</p>
+          </div>
+        </div>
+
+        <div class="path-list">
+          <article class="path">
+            <span class="path-no">01</span>
+            <div>
+              <h3>Web API</h3>
+              <p>The Tozed endpoints behind the web UI. Login is the exact <code>get_random_login → LOGIN → get_token</code> sequence from the firmware's own JavaScript, including the hash and CSRF handling. A bounded worker pool sweeps <code>goformId</code> values and reports anything that is not the canonical failure body.</p>
+            </div>
+            <div class="path-meta"><b>PORT / 80</b><code>scan · api-exploit · status</code><br>verified corpus + reported IDs<br>rate-limited workers</div>
+          </article>
+
+          <article class="path">
+            <span class="path-no">02</span>
+            <div>
+              <h3>Root shell</h3>
+              <p>A command injection in the <code>ids</code> field of <code>REMOVE_WHITE_SITE</code> starts <code>telnetd</code> on port 23. SSH is available through <code>shell --ssh</code>, and <code>persist</code> writes a boot block (after backing up <code>/etc/rc</code>) so both ports return after a reboot.</p>
+            </div>
+            <div class="path-meta"><b>PORT / 23 · 22</b><code>telnet · shell · persist</code><br>runtime or persistent<br>download via local HTTP</div>
+          </article>
+
+          <article class="path">
+            <span class="path-no">03</span>
+            <div>
+              <h3>TR-069 management channel</h3>
+              <p>The stock ACS is remote, which means the router can be managed by someone else. <code>tr069-exploit</code> turns this machine into the ACS: it answers the SOAP <code>Inform</code>, then pushes <code>SetParameterValues</code>, <code>Download</code> or <code>Reboot</code> on the next CPE request.</p>
+            </div>
+            <div class="path-meta"><b>PORT / 7547</b><code>tr069-exploit</code><br>local ACS simulator<br>correct CWMP envelopes</div>
+          </article>
+
+          <article class="path">
+            <span class="path-no">04</span>
+            <div>
+              <h3>Serial console</h3>
+              <p>When the software path is locked, the hardware path remains. <code>uart-at</code> opens a 3.3V TTL serial line and runs scripted AT commands with send/expect semantics — no dependency on the web API.</p>
+            </div>
+            <div class="path-meta"><b>UART / 3.3V TTL</b><code>uart-at · config-decrypt</code><br>send/expect engine<br>offline config analysis</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Write gate -->
+    <section id="gate" class="section gate">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-no">02 / SAFETY</span>
+          <div>
+            <div class="kicker">The write gate</div>
+            <h2>Nothing reaches the device by accident</h2>
+            <p>Every mutating command has to pass the same sequence. This is the part of the design that matters most on hardware you cannot replace.</p>
+          </div>
+        </div>
+
+        <div class="gate-flow">
+          <div class="gate-step"><span>01 / observe</span><strong>Read first</strong><p><code>scan</code> and <code>status</code> never write. Fingerprint the firmware before forming a plan.</p></div>
+          <div class="gate-step"><span>02 / default</span><strong>Dry-run</strong><p>Mutations start with <code>--dry-run=true</code>. You see the exact commands or RPCs instead of an applied change.</p></div>
+          <div class="gate-step"><span>03 / opt in</span><strong>Explicit flag</strong><p>Writing requires <code>--dry-run=false</code>. There is no implicit "yes" anywhere in the tool.</p></div>
+          <div class="gate-step"><span>04 / confirm</span><strong>Confirm</strong><p>Destructive RPCs, NVRAM writes and UART commands ask interactively, or need <code>--yes</code>.</p></div>
+          <div class="gate-step"><span>05 / recover</span><strong>Back up</strong><p><code>unlock</code> saves NVRAM to <code>/tmp/zlt_xloader-nv-backup.txt</code>; <code>persist</code> copies <code>/etc/rc</code>.</p></div>
+        </div>
+        <p class="gate-foot">Profile constants can be corrected from a packet capture without recompiling — but a wrong value can still brick the device. There is no warranty.</p>
+      </div>
+    </section>
+
+    <!-- Variants -->
+    <section id="variants" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-no">03 / COVERAGE</span>
+          <div>
+            <h2>Known firmware variants</h2>
+            <p>The default profile targets the Dialog / SLT-Mobitel build. Two more ship with their own fingerprint commands, payload sets and unlock keys.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data">
+            <thead>
+              <tr><th>Profile file</th><th>Firmware</th><th>Variant</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>zlt_s20_1.12.7.json</td><td>S20_1.12.7</td><td>Dialog / SLT-Mobitel</td><td>Verified against <code>service.js</code>. Default profile.</td></tr>
+              <tr><td>zlt_m910w_1.13.6.json</td><td>S20_1.13.6</td><td>MTN</td><td>Variant-specific unlock parameters.</td></tr>
+              <tr><td>zlt_s20_1.02.7.json</td><td>S20_1.02.7</td><td>ORG</td><td>Variant-specific fingerprint and NVRAM keys.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">Standard ZTE tooling does not work on this hardware — Tozed uses a different web API. If your build is not listed, copy a profile, mirror the observed parameter names from a capture, and pass it with <code>--profile</code>. See the <a href="docs/profiles.html">profile guide</a>.</p>
+      </div>
+    </section>
+
+    <!-- Setup -->
+    <section id="setup" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-no">04 / FIELD SETUP</span>
+          <div>
+            <h2>Install, verify, scan</h2>
+            <p>Choose a platform, then a workflow. All commands are taken verbatim from the repository README.</p>
+          </div>
+        </div>
+
+        <div class="setup-grid">
+          <div class="setup-tabs" role="tablist" aria-label="Platform">
+            <button class="setup-tab active" type="button" role="tab" aria-selected="true" data-setup="windows">Windows</button>
+            <button class="setup-tab" type="button" role="tab" aria-selected="false" data-setup="linux">Linux</button>
+            <button class="setup-tab" type="button" role="tab" aria-selected="false" data-setup="macos">macOS</button>
+            <button class="setup-tab" type="button" role="tab" aria-selected="false" data-setup="source">From source</button>
+          </div>
+
+          <div>
+            <div id="setup-windows" class="setup-panel active" role="tabpanel">
+              <div class="step-block">
+                <div class="step-head"><h3>Get the Windows archive</h3><span>amd64 / 386</span></div>
+                <p>Download the archive and <code>checksums.txt</code> from the Releases page, verify the hash, then run <code>zlt_xloader.exe</code> from the extracted folder.</p>
+                <div class="code">
+                  <div class="code-head"><span>PowerShell</span><button class="copy" type="button" data-copy-text=".\\zlt_xloader.exe version">Copy</button></div>
+                  <pre><code>.\zlt_xloader.exe version
+.\zlt_xloader.exe --target 192.168.1.1 scan</code></pre>
+                </div>
+                <p class="hint-inline"><a href="https://github.com/anusara-bemal/zlt_xloader/releases" target="_blank" rel="noopener">Releases and checksums ↗</a></p>
+              </div>
+            </div>
+
+            <div id="setup-linux" class="setup-panel" role="tabpanel">
+              <div class="step-block">
+                <div class="step-head"><h3>Verify and run</h3><span>amd64 / arm64 / armv7</span></div>
+                <div class="code">
+                  <div class="code-head"><span>Bash</span><button class="copy" type="button" data-copy-text="sha256sum zlt_xloader_linux_amd64.tar.gz">Copy</button></div>
+                  <pre><code>sha256sum zlt_xloader_linux_amd64.tar.gz
+tar -xzf zlt_xloader_linux_amd64.tar.gz
+./zlt_xloader version
+./zlt_xloader --target 192.168.1.1 scan</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div id="setup-macos" class="setup-panel" role="tabpanel">
+              <div class="step-block">
+                <div class="step-head"><h3>Verify and run</h3><span>amd64 / arm64</span></div>
+                <div class="code">
+                  <div class="code-head"><span>Terminal</span><button class="copy" type="button" data-copy-text="./zlt_xloader version">Copy</button></div>
+                  <pre><code>./zlt_xloader version
+./zlt_xloader --target 192.168.1.1 scan</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div id="setup-source" class="setup-panel" role="tabpanel">
+              <div class="step-block">
+                <div class="step-head"><h3>Build from source</h3><span>Go 1.22+</span></div>
+                <div class="code">
+                  <div class="code-head"><span>Bash</span><button class="copy" type="button" data-copy-text="git clone https://github.com/anusara-bemal/zlt_xloader.git">Copy</button></div>
+                  <pre><code>git clone https://github.com/anusara-bemal/zlt_xloader.git
+cd zlt_xloader
+go build -o zlt_xloader .
+make build-all VERSION=v1.0.0</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-block">
+              <div class="step-head"><h3>Common workflows</h3><span>preview first</span></div>
+              <div class="inline-tabs" role="tablist" aria-label="Workflows">
+                <button class="inline-tab active" type="button" role="tab" aria-selected="true" data-work="scan">Scan</button>
+                <button class="inline-tab" type="button" role="tab" aria-selected="false" data-work="shell">Shell</button>
+                <button class="inline-tab" type="button" role="tab" aria-selected="false" data-work="unlock">Unlock</button>
+                <button class="inline-tab" type="button" role="tab" aria-selected="false" data-work="tr069">TR-069</button>
+                <button class="inline-tab" type="button" role="tab" aria-selected="false" data-work="variants">Other profiles</button>
+              </div>
+
+              <div id="work-scan" class="inline-panel active" role="tabpanel">
+                <div class="code">
+                  <div class="code-head"><span>Read-only</span><button class="copy" type="button" data-copy-text="./zlt_xloader --target 192.168.1.1 scan">Copy</button></div>
+                  <pre><code>./zlt_xloader --target 192.168.1.1 scan
+./zlt_xloader scan --ports 23,80,8080,7547,443
+./zlt_xloader status</code></pre>
+                </div>
+              </div>
+
+              <div id="work-shell" class="inline-panel" role="tabpanel">
+                <div class="code">
+                  <div class="code-head"><span>Root shell</span><button class="copy" type="button" data-copy-text="./zlt_xloader shell">Copy</button></div>
+                  <pre><code>./zlt_xloader shell
+./zlt_xloader shell --command "nv get sim_plmn"
+./zlt_xloader shell --at --command "AT+CSQ"
+./zlt_xloader --target 192.168.1.1 shell --ssh</code></pre>
+                </div>
+                <p class="hint-inline">Telnet is enabled automatically if port 23 is closed. Use <code>persist</code> to start telnet and SSH at every boot.</p>
+              </div>
+
+              <div id="work-unlock" class="inline-panel" role="tabpanel">
+                <div class="code">
+                  <div class="code-head"><span>Preview, then apply</span><button class="copy" type="button" data-copy-text="./zlt_xloader unlock">Copy</button></div>
+                  <pre><code>./zlt_xloader unlock
+./zlt_xloader --dry-run=false --yes unlock --reboot
+./zlt_xloader --dry-run=false --yes persist --reboot
+./zlt_xloader --dry-run=false --yes unhide --reboot</code></pre>
+                </div>
+                <p class="hint-inline">NVRAM and the boot script are backed up on the device before these commands write.</p>
+              </div>
+
+              <div id="work-tr069" class="inline-panel" role="tabpanel">
+                <div class="code">
+                  <div class="code-head"><span>Local ACS</span><button class="copy" type="button" data-copy-text="./zlt_xloader tr069-exploit --rpc reboot">Copy</button></div>
+                  <pre><code>./zlt_xloader tr069-exploit --rpc set-params \
+  --param InternetGatewayDevice.ManagementServer.URL \
+  --value http://192.168.1.2:7547/acs
+
+./zlt_xloader --dry-run=false --yes tr069-exploit \
+  --set-acs --rpc reboot</code></pre>
+                </div>
+              </div>
+
+              <div id="work-variants" class="inline-panel" role="tabpanel">
+                <div class="code">
+                  <div class="code-head"><span>Other profiles</span><button class="copy" type="button" data-copy-text="./zlt_xloader --profile ./profiles/zlt_m910w_1.13.6_mtn.json scan">Copy</button></div>
+                  <pre><code>./zlt_xloader --profile ./profiles/zlt_m910w_1.13.6_mtn.json scan
+./zlt_xloader --profile ./profiles/zlt_s20_1.02.7_org.json status
+./zlt_xloader uart-at --list
+./zlt_xloader config-decrypt --file ./config.bin --top 10</code></pre>
+                </div>
+                <p class="hint-inline">UART is 3.3V TTL only. Read the <a href="docs/hardware.html">hardware notes</a> before connecting an adapter.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Command index -->
+    <section id="commands" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-no">05 / INDEX</span>
+          <div>
+            <h2>Seventeen commands</h2>
+            <p>Filter by access path or search by name. Each entry links into the full reference.</p>
+          </div>
+        </div>
+
+        <div class="index-tools">
+          <div class="filters" role="group" aria-label="Filter commands">
+            <button class="filter active" type="button" data-filter="all">all</button>
+            <button class="filter" type="button" data-filter="api">web api</button>
+            <button class="filter" type="button" data-filter="shell">shell</button>
+            <button class="filter" type="button" data-filter="tr069">tr-069</button>
+            <button class="filter" type="button" data-filter="uart">uart / offline</button>
+          </div>
+          <div>
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input id="command-search" type="search" placeholder="search commands" aria-label="Search commands" autocomplete="off">
+            </div>
+            <span class="cmd-count" id="command-count">17 entries</span>
+          </div>
+        </div>
+
+        <div id="command-index" class="cmd-index"></div>
+      </div>
+    </section>
+
+    <!-- Safety -->
+    <section id="safety" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-no">06 / BOUNDARY</span>
+          <div>
+            <h2>Educational use, owned hardware only</h2>
+            <p>These are the terms the project is built around. Read them before running a mutating command.</p>
+          </div>
+        </div>
+
+        <div class="notice">
+          <div class="notice-label">Read this first</div>
+          <div>
+            <h3>This tool is for devices you own</h3>
+            <p>Use it only for lawful security research on hardware you personally operate, or a device you are explicitly authorised in writing to test. Unlocking a carrier lock may breach your contract or local law. Modifying firmware can permanently brick the device and void its warranty. There is no warranty, and the authors are not liable for misuse.</p>
+          </div>
+        </div>
+
+        <ul class="notice-list">
+          <li><b>Dry-run default</b> — <code>--dry-run=true</code> until you opt out.</li>
+          <li><b>Confirmation</b> — destructive operations prompt or require <code>--yes</code>.</li>
+          <li><b>Backups</b> — NVRAM and <code>/etc/rc</code> saved before writes.</li>
+          <li><b>3.3V TTL only</b> — an RS232 adapter will destroy the board.</li>
+          <li><b>No telemetry</b> — all traffic stays on your local network.</li>
+          <li><b>All rights reserved</b> — proprietary source; see LICENSE and NOTICE.</li>
+        </ul>
+
+        <div class="legal">
+          <strong>Legal &amp; trademark notice:</strong> zlt_xloader is an independent project by anusara-bemal.
+          Copyright © 2026 anusara-bemal. All rights reserved. “Tozed”, “ZTE” and product names are trademarks of
+          their respective owners; this project is not affiliated with, sponsored by or endorsed by Tozed or ZTE.
+          See the <a href="docs/disclaimer.html">full disclaimer</a> and <a href="docs/faq.html">FAQ</a>.
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-no">07 / NOTES</span>
+          <div>
+            <h2>Before you flash anything</h2>
+            <p>Short answers to the questions that come up most often.</p>
+          </div>
+        </div>
+
+        <div class="qa">
+          <div class="qa-item"><span class="qa-no">Q1</span><div><h3>Is this legal?</h3><p>It is intended for lawful research on devices you own or are authorised to test. Check your jurisdiction before attempting to remove a carrier lock.</p></div></div>
+          <div class="qa-item"><span class="qa-no">Q2</span><div><h3>Will it work on my router?</h3><p>The shipped profiles cover S20_1.12.7 (Dialog / SLT), S20_1.13.6 (MTN) and S20_1.02.7 (ORG). Run <code>scan</code> first to fingerprint your device.</p></div></div>
+          <div class="qa-item"><span class="qa-no">Q3</span><div><h3>Does it change anything by default?</h3><p>No. Mutations default to <code>--dry-run=true</code>, and destructive operations require confirmation.</p></div></div>
+          <div class="qa-item"><span class="qa-no">Q4</span><div><h3>Does telnet survive a reboot?</h3><p>No. <code>telnet</code> starts a runtime daemon only. Use <code>persist</code> for boot-time telnet and SSH, or rerun the command.</p></div></div>
+          <div class="qa-item"><span class="qa-no">Q5</span><div><h3>Why not standard ZTE tooling?</h3><p>Tozed uses a different web API. This tool implements the Tozed login/CSRF flow and targets those endpoints directly.</p></div></div>
+          <div class="qa-item"><span class="qa-no">Q6</span><div><h3>Can I add my firmware?</h3><p>Yes — copy a profile and mirror the parameter names from a packet capture. Never commit personal data. See the <a href="docs/profiles.html">profile guide</a>.</p></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <div class="container">
+      <div class="foot-grid">
+        <div>
+          <a class="brand" href="#top"><img src="assets/favicon.svg" alt="" width="26" height="26"><span class="brand-name">zlt_xloader</span></a>
+          <p>Security research and device ownership for the Tozed ZLT S20. For lawful use on hardware you own.</p>
+          <div class="foot-tags"><span>Go 1.22+</span><span>17 commands</span><span>dry-run default</span></div>
+        </div>
+        <div class="foot-col"><h5>Docs</h5><ul><li><a href="docs/index.html">Index</a></li><li><a href="docs/installation.html">Installation</a></li><li><a href="docs/quickstart.html">Quickstart</a></li><li><a href="docs/commands-recon.html">Command reference</a></li></ul></div>
+        <div class="foot-col"><h5>Project</h5><ul><li><a href="https://github.com/anusara-bemal/zlt_xloader" target="_blank" rel="noopener">Repository ↗</a></li><li><a href="https://github.com/anusara-bemal/zlt_xloader/releases" target="_blank" rel="noopener">Releases ↗</a></li><li><a href="docs/changelog.html">Changelog</a></li><li><a href="docs/contributing.html">Contributing</a></li></ul></div>
+        <div class="foot-col"><h5>Reference</h5><ul><li><a href="docs/how-it-works.html">How it works</a></li><li><a href="docs/hardware.html">Hardware notes</a></li><li><a href="docs/faq.html">FAQ</a></li><li><a href="docs/disclaimer.html">Disclaimer</a></li></ul></div>
+      </div>
+      <div class="foot-bottom"><div>Copyright © 2026 anusara-bemal. All rights reserved.</div><div>Educational use only — do not misuse.</div></div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

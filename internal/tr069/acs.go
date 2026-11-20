@@ -120,7 +120,7 @@ func (s *Server) nextRPC() string {
 			name = "InternetGatewayDevice.ManagementServer.URL"
 		}
 		log.Infof("[acs] pushing SetParameterValues %s=%s", name, s.ParamValue)
-		return Envelope(Header("1"), SetParameterValues([]Parameter{{Name: name, Value: s.ParamValue}}, "zlt-unlocker"))
+		return Envelope(Header("1"), SetParameterValues([]Parameter{{Name: name, Value: s.ParamValue}}, "zlt_xloader"))
 	case "none":
 		return Envelope(Header("1"), "")
 	default:
@@ -140,6 +140,6 @@ func (s *Server) serveConfigFile(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) writeInstructions(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	fmt.Fprintln(w, "zlt-unlocker ACS simulator is running.")
+	fmt.Fprintln(w, "zlt_xloader ACS simulator is running.")
 	fmt.Fprintf(w, "Set the router's ACS URL to: http://<this-host>%s\n", s.Path)
 }

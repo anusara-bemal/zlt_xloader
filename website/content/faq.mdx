@@ -1,0 +1,43 @@
+---
+title: FAQ
+description: Common questions about legality, safety, compatibility and troubleshoot
+order: 23
+section: Guides
+updated: "2026-11-20"
+---
+
+## Is this legal?
+
+The project is intended for lawful security research and for devices you personally own or are explicitly authorised to test. Unlocking a carrier or SIM lock may breach your service contract or local law, so check your jurisdiction before proceeding. The authors are not liable for misuse.
+
+## Will this work on my router?
+
+The default profile targets the Tozed ZLT S20 with firmware `S20_1.12.7` (Dialog / SLT-Mobitel). Profiles also ship for the MTN `S20_1.13.6` and ORG `S20_1.02.7` variants. Standard ZTE tooling does not work on this hardware because Tozed uses a different web API. Run `scan` first to fingerprint your device, then compare the reported firmware with the available profiles.
+
+## Does it change anything by default?
+
+No. Every mutating action defaults to `--dry-run=true`. Nothing is written to the device unless you explicitly pass `--dry-run=false`. Destructive TR-069 RPCs and NVRAM writes also require interactive confirmation or `--yes`.
+
+## Can I break my router?
+
+Yes. Modifying firmware can permanently brick the device and void its warranty. The tool backs up NVRAM before `unlock` and the boot script before `persist`, but a failed write can still leave the device unusable. Only proceed on hardware you can afford to lose.
+
+## Why does standard ZTE tooling fail here?
+
+Tozed's web API differs from the one used by ZTE ONU tools. This project targets the Tozed endpoints directly, including the exact login and CSRF sequence recovered from the firmware's `service.js`.
+
+## Does telnet stay on after a reboot?
+
+No. `telnet` starts a runtime-only daemon. Use `persist` to start telnet and SSH at every boot, or rerun `telnet` after each restart.
+
+## Can you add support for my firmware variant?
+
+Contributions are welcome. Capture the login/session traffic, copy an existing profile, and mirror the exact parameter names and IDs. See [Device profiles](/docs/profiles/) and the repository's `CONTRIBUTING.md`. Never include personal data from a capture.
+
+## Where do I report a vulnerability?
+
+Privately, through `SECURITY.md` in the repository. Do not open a public issue for a security vulnerability.
+
+## Is there a graphical interface?
+
+A separate `zlt_xloader-gui.exe` binary is present in the repository alongside the CLI. The documented and supported interface is the command-line tool.

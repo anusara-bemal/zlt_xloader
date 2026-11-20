@@ -1,0 +1,56 @@
+---
+title: Recon commands
+description: scan, status and version — read-only inspection of the device and the binary.
+order: 10
+section: Command reference
+label: Recon
+updated: "2026-11-20"
+---
+
+import Command from '../../components/Command.astro';
+
+Every command accepts the same global flags:
+
+| Flag | Purpose |
+| --- | --- |
+| `--target` | Router address, for example `192.168.1.1`. |
+| `--timeout` | Per-request timeout. |
+| `--profile` | Path to an alternate JSON device profile. |
+| `--dry-run` | `true` by default; set to `false` to allow writes. |
+| `--verbose` | Detailed request and response logging. |
+| `--json` | Machine-readable output. |
+| `--yes` | Skip interactive confirmation prompts. |
+
+<Command
+  name="scan"
+  tag="read-only"
+  syntax="./zlt_xloader --target 192.168.1.1 scan"
+  flags={[{ flag: '--ports', description: 'Comma-separated port list (default 23,80,8080,7547).' }]}
+>
+  <p>
+    Reachability check, TCP port scan and firmware/model fingerprinting. Reports the
+    active profile, firmware string, model and ACS URL. Nothing is written to the device.
+  </p>
+</Command>
+
+<Command
+  name="status"
+  tag="read-only"
+  syntax="./zlt_xloader status"
+>
+  <p>
+    Device, SIM, lock, signal and NVRAM status. Values are read through a shell, so the
+    reported lock state is the real NVRAM state even when the web API returns empty values.
+  </p>
+</Command>
+
+<Command
+  name="version"
+  tag="local"
+  syntax="./zlt_xloader version"
+>
+  <p>
+    Prints the version, commit and build date injected at build time. Useful when checking
+    whether a firmware fix is present in the binary you downloaded.
+  </p>
+</Command>

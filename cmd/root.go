@@ -14,7 +14,7 @@ import (
 	"github.com/anusara-bemal/zlt_xloader/internal/profile"
 )
 
-const rootLong = `zlt-unlocker - security research toolkit for the Tozed ZLT S20 4G router.
+const rootLong = `zlt_xloader - security research toolkit for the Tozed ZLT S20 4G router.
 
 EDUCATIONAL USE ONLY - DO NOT MISUSE:
   This project was created strictly for learning and lawful security research.
@@ -56,7 +56,7 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:           "zlt-unlocker",
+	Use:           "zlt_xloader",
 	Short:         "Security research toolkit for Tozed ZLT S20 routers",
 	Long:          rootLong,
 	SilenceUsage:  true,

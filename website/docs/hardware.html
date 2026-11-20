@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hardware notes — zlt_xloader docs</title>
+  <meta name="description" content="Serial voltage, pinouts, reboot behaviour and what can and cannot be changed from the router.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="theme-color" content="#f4f1ea">
+  <link rel="canonical" href="https://anusara-bemal.github.io/docs/hardware.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="zlt_xloader">
+  <meta property="og:title" content="Hardware notes — zlt_xloader docs">
+  <meta property="og:description" content="Serial voltage, pinouts, reboot behaviour and what can and cannot be changed from the router.">
+  <meta property="og:url" content="https://anusara-bemal.github.io/docs/hardware.html">
+  <meta property="og:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hardware notes — zlt_xloader docs">
+  <meta name="twitter:description" content="Serial voltage, pinouts, reboot behaviour and what can and cannot be changed from the router.">
+  <meta name="twitter:image" content="https://anusara-bemal.github.io/assets/og.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","name":"zlt_xloader","description":"Security research and device ownership toolkit for the Tozed ZLT S20 4G router.","applicationCategory":"SecurityApplication","operatingSystem":"Windows, Linux, macOS","programmingLanguage":"Go","codeRepository":"https://github.com/anusara-bemal/zlt_xloader","url":"https://anusara-bemal.github.io/","author":{"@type":"Person","name":"anusara-bemal"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"zlt_xloader","item":"https://anusara-bemal.github.io/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://anusara-bemal.github.io/docs/"},{"@type":"ListItem","position":3,"name":"Hardware notes","item":"https://anusara-bemal.github.io/docs/hardware.html"}]}]}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-head">
+    <div class="container head-inner">
+      <a class="brand" href="../index.html" aria-label="zlt_xloader home">
+        <img src="../assets/favicon.svg" alt="" width="26" height="26">
+        <span class="brand-name">zlt_xloader</span>
+        <span class="brand-ver">FIELD MANUAL / 1.0</span>
+      </a>
+
+      <nav aria-label="Primary">
+        <ul class="nav">
+          <li><a href="../index.html#paths">Access paths</a></li>
+          <li><a href="../index.html#gate">Write gate</a></li>
+          <li><a href="../index.html#variants">Variants</a></li>
+          <li><a href="../index.html#setup">Setup</a></li>
+          <li><a href="../index.html#commands">Commands</a></li>
+          <li><a href="index.html" aria-current="page">Docs ↗</a></li>
+        </ul>
+      </nav>
+
+      <div class="head-end">
+        <a class="head-link" href="https://github.com/anusara-bemal/zlt_xloader" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href="../index.html#setup">Get the binary</a>
+        <button id="menu-btn" class="menu-btn" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobile-nav">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
+      <ul>
+        <li><a href="../index.html#paths">Access paths</a></li>
+        <li><a href="../index.html#gate">Write gate</a></li>
+        <li><a href="../index.html#variants">Variants</a></li>
+        <li><a href="../index.html#setup">Setup</a></li>
+        <li><a href="../index.html#commands">Commands</a></li>
+        <li><a href="../index.html#safety">Safety &amp; legal</a></li>
+        <li><a href="index.html">Documentation ↗</a></li>
+      </ul>
+    </nav>
+  </header>
+<main id="main"><div class="container doc-shell">
+    <aside class="doc-sidebar" aria-label="Documentation navigation"><div class="doc-sidebar-group"><div class="doc-sidebar-label">Getting started</div><ul><li><a href="introduction.html">Introduction</a></li><li><a href="disclaimer.html">Disclaimer &amp; safety model</a></li><li><a href="installation.html">Installation</a></li><li><a href="quickstart.html">Quickstart</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Command reference</div><ul><li><a href="commands-recon.html">Recon</a></li><li><a href="commands-access.html">Access &amp; shell</a></li><li><a href="commands-unlock.html">Unlock &amp; optimise</a></li><li><a href="commands-advanced.html">Advanced</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Guides</div><ul><li><a href="profiles.html">Device profiles</a></li><li><a href="how-it-works.html">How it works</a></li><li><a href="hardware.html" aria-current="page">Hardware notes</a></li><li><a href="faq.html">FAQ</a></li></ul></div><div class="doc-sidebar-group"><div class="doc-sidebar-label">Project</div><ul><li><a href="contributing.html">Contributing</a></li><li><a href="changelog.html">Changelog</a></li></ul></div></aside>
+    <article class="doc-main">
+      <h1>Hardware notes</h1>
+      <p class="doc-lead">Serial voltage, pinouts, reboot behaviour and what can and cannot be changed from the router.</p>
+      <div class="prose"><div class="doc-callout doc-callout--danger"><strong>Voltage warning</strong><p>The router's serial header uses 3.3V TTL logic. Do not connect an RS232 adapter, which uses plus or minus 12V — it will destroy the board. Use a 3.3V USB-UART adapter and trace the pinout for your board revision before probing.</p></div>
+<h2 id="serial-uart">Serial / UART</h2>
+<ul><li>Use <code>uart-at --list</code> to enumerate ports on this machine.</li><li>Use <code>uart-at --port COM3 --script</code> to preview the scripted AT sequence without opening the port.</li><li>Use <code>uart-at --simulate --script</code> to verify the AT engine end-to-end against an in-memory mock device.</li><li>Pinouts vary by board revision. Do not assume a layout from a photo of a different board.</li></ul>
+<h2 id="shell-persistence">Shell persistence</h2>
+<p><code>telnet</code> starts a runtime-only <code>telnetd</code> on port 23. After a reboot, that shell is gone. Two options:</p>
+<ul><li>Rerun <code>telnet</code> after each reboot.</li><li>Run <code>persist</code>, which appends a boot block to <code>/etc/rc</code> (backed up to <code>/etc/rc.zlt-backup</code>) and enables the NVRAM flags for telnet, ADB and dropbear. After reboot, ports 23 and 22 open automatically.</li></ul>
+<p>ADB on this firmware binds only <code>127.0.0.1:5037</code> in host mode and needs USB. Network ADB on port 5555 is not available without additional firmware support.</p>
+<h2 id="rf-and-network-limits">RF and network limits</h2>
+<p><code>optimize</code> prints band, bandwidth, RSRP/RSRQ/SINR, PCI and SIM PLMN, and changes only what the router controls: DNS, data-cap and quota alerts, QoS and band lock. Carrier-core latency from CGNAT or roaming cannot be changed from the device.</p>
+<p>On the reference device the air interface was already healthy — Band 3, 20 MHz, SINR around 19 dB — so remaining latency was in the operator's network.</p>
+<h2 id="physical-risk">Physical risk</h2>
+<p>Enabling ports, writing NVRAM and pushing a TR-069 <code>Download</code> RPC can render the router unusable. Modifying firmware can permanently brick the device and void its warranty. Keep a recovery plan and only work on hardware you can afford to lose.</p></div>
+      <p class="hint-inline">Last reviewed: 2026-11-20</p>
+      <nav class="doc-pager" aria-label="Documentation pages"><a href="how-it-works.html"><span>← Previous</span><strong>How it works</strong></a><a href="faq.html"><span>Next →</span><strong>FAQ</strong></a></nav>
+    </article>
+    <aside class="doc-toc" aria-label="On this page"><div class="doc-toc-label">On this page</div><nav><ul><li class="depth-2"><a href="#serial-uart">Serial / UART</a></li><li class="depth-2"><a href="#shell-persistence">Shell persistence</a></li><li class="depth-2"><a href="#rf-and-network-limits">RF and network limits</a></li><li class="depth-2"><a href="#physical-risk">Physical risk</a></li></ul></nav></aside>
+  </div></main>
+  <footer class="site-foot">
+    <div class="container foot-grid">
+      <div>
+        <a class="brand" href="../index.html"><img src="../assets/favicon.svg" alt="" width="26" height="26"><span class="brand-name">zlt_xloader</span></a>
+        <p>Security research and device ownership for the Tozed ZLT S20. For lawful use on hardware you own.</p>
+      </div>
+      <div class="foot-col"><h5>Docs</h5><ul><li><a href="index.html">Index</a></li><li><a href="disclaimer.html">Disclaimer</a></li><li><a href="quickstart.html">Quickstart</a></li></ul></div>
+      <div class="foot-col"><h5>Project</h5><ul><li><a href="../index.html#paths">Features</a></li><li><a href="changelog.html">Changelog</a></li><li><a href="contributing.html">Contributing</a></li></ul></div>
+      <div class="foot-col"><h5>Reference</h5><ul><li><a href="how-it-works.html">How it works</a></li><li><a href="hardware.html">Hardware notes</a></li><li><a href="faq.html">FAQ</a></li></ul></div>
+    </div>
+    <div class="container foot-bottom"><div>Copyright © 2026 anusara-bemal. All rights reserved.</div><div>Educational use only — do not misuse.</div></div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

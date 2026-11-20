@@ -13,6 +13,7 @@ listed in go.mod and go.sum:
   - github.com/spf13/pflag        (BSD-3-Clause)
   - github.com/sirupsen/logrus    (MIT)
   - go.bug.st/serial              (BSD-3-Clause)
+  - golang.org/x/crypto           (BSD-3-Clause)
   - golang.org/x/sys              (BSD-3-Clause)
   - github.com/creack/goselect    (MIT)
   - github.com/inconshreveable/mousetrap (BSD-3-Clause)

@@ -18,7 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `make check`, `make ci`, `make cover`, `make snapshot` and `make release`
   targets.
 - Prominent educational-use-only / do-not-misuse warning in the README, CLI
-  help and LICENSE.
+  help, LICENSE and `WARNING.md`.
+- SSH client transport (`internal/sshclient`) and `shell --ssh`, including
+  best-effort dropbear enablement.
+- Device profiles for the MTN `S20_1.13.6` and ORG `S20_1.02.7` variants, with
+  variant-specific unlock parameters driven by the new profile `unlock` section.
+- `tr069-exploit --set-acs` pushes the local ACS URL via `setTR069Config`.
+- Additional goformIds: `SET_DEVICE_MODE`, `TZ_SET_USB_STATUS`, `DMZ_SETTING`,
+  `setTR069Config` and `REBOOT_DEVICE`.
 
 ### Changed
 

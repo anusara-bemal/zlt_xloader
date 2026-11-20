@@ -32,7 +32,12 @@
     { "id": "APN_PROC_EX", "method": "POST", "description": "reported: reset APN profile 1 to default", "args": { "isTest": "false", "apn_action": "set_default", "index": "1" } },
     { "id": "SET_WEB_LANGUAGE", "method": "POST", "description": "reported: language + ADB toggle", "args": { "isTest": "false", "Language": "en", "adbd_enable": "1" } },
     { "id": "SET_SYSTEM_INFO", "method": "POST", "description": "reported: telnetd toggle (unverified ID)", "args": { "isTest": "false", "telnetd_enable": "1" } },
-    { "id": "RESTORE_FACTORY_SETTINGS", "method": "POST", "description": "DESTRUCTIVE: factory reset", "args": { "isTest": "false" } }
+    { "id": "RESTORE_FACTORY_SETTINGS", "method": "POST", "description": "DESTRUCTIVE: factory reset", "args": { "isTest": "false" } },
+    { "id": "REBOOT_DEVICE", "method": "POST", "description": "reported: reboot via web API", "args": { "isTest": "false" } },
+    { "id": "SET_DEVICE_MODE", "method": "POST", "description": "reported: device mode / debug toggle", "args": { "isTest": "false", "debug_enable": "1" } },
+    { "id": "TZ_SET_USB_STATUS", "method": "POST", "description": "reported: enable USB port and USB download", "args": { "isTest": "false", "usbPortEnable": "1", "usbDownloadEnable": "1" } },
+    { "id": "DMZ_SETTING", "method": "POST", "description": "reported: DMZ configuration", "args": { "isTest": "false" } },
+    { "id": "setTR069Config", "method": "POST", "description": "reported: point TR-069 at a local ACS", "args": { "isTest": "false", "configurationMode": "0", "acsUrl": "", "periodicInformInterval": "30", "tr069Enable": "1", "periodicInform": "1", "restartTr069": "1" } }
   ],
   "fuzz": {
     "keywords": ["plmn", "lock", "sim", "unlock", "nv_write"],
@@ -80,6 +85,19 @@
       "ZLT",
       "zlt_s20",
       "slt_mobitel"
+    ]
+  },
+  "unlock": {
+    "backup_path": "/tmp/zlt-unlocker-nv-backup.txt",
+    "save": true,
+    "nv": [
+      { "key": "tz_lock_plmn_state", "value": "no", "path": "/etc_ro/default/default_parameter_sys" },
+      { "key": "tz_lock_plmn_list", "value": "", "path": "/etc_ro/default/default_parameter_sys" },
+      { "key": "tz_lock_band_state", "value": "no", "path": "/etc_ro/default/default_parameter_sys" },
+      { "key": "tz_lock_3G_band_state", "value": "no", "path": "/etc_ro/default/default_parameter_sys" },
+      { "key": "tz_lock_imsi_state", "value": "0" },
+      { "key": "use_lock_net", "value": "no" },
+      { "key": "tz_lock_sim", "value": "0" }
     ]
   }
 }

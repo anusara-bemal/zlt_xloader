@@ -8,6 +8,8 @@
 > [!WARNING]
 > **EDUCATIONAL PURPOSES ONLY — DO NOT MISUSE.** This project was created for learning and lawful security research on devices you own or are explicitly authorised to test. Do not use it for unauthorised access to, or modification of, any device or network you do not own. Misuse is prohibited and may be illegal.
 
+Also read [WARNING.md](WARNING.md) for the upstream firmware-compatibility warning.
+
 A security-research and device-ownership toolkit for the **Tozed ZLT S20 4G router** (firmware `S20_1.12.7`, Dialog / SLT-Mobitel variants).
 
 Standard ZTE tooling (`zteOnu`, `factorymode_crack`, …) does not work on this device because Tozed uses a different web API. This tool targets the Tozed-specific endpoints directly.
@@ -60,13 +62,13 @@ a public issue.
 | `persist` | Make telnet (23) and SSH (22) start automatically at every boot. |
 | `unhide` | Reveal UI pages/features hidden by the carrier firmware. |
 | `optimize` | Show RF diagnostics and tune DNS / remove data-cap throttling. |
-| `shell` | Interactive root shell over telnet (auto-enables telnet), or run one command / AT command. |
+| `shell` | Interactive root shell over telnet or SSH (`--ssh`), or run one command / AT command. |
 | `status` | Device, SIM, lock, signal and NVRAM status. |
 | `power` | Reboot or power off the router. |
 | `sms` | List stored messages and send SMS. |
 | `ussd` | Send a USSD code and read the response. |
 | `download` | Export a config/log file from the router through a local HTTP endpoint. |
-| `tr069-exploit` | Local ACS simulator that answers CPE `Inform` messages and pushes configuration RPCs. |
+| `tr069-exploit` | Local ACS simulator that answers CPE `Inform` messages and pushes configuration RPCs; `--set-acs` pushes the URL to the router automatically. |
 | `uart-at` | Serial/UART interface for raw AT commands (`AT^NVW`, `AT+CLCK="PN",0`, …). |
 | `config-decrypt` | `config.bin` container parser, entropy analysis and heuristic key discovery. |
 | `version` | Version and build information. |
@@ -284,6 +286,24 @@ used by the reference project.
 > `/etc_ro/...` into Windows paths. Prefix the command with
 > `MSYS_NO_PATHCONV=1` when using `--remote`.
 
+### 2d-2. SSH shell and other firmware variants
+
+```bash
+# Interactive SSH root shell (uses the active profile's credentials by default)
+./zlt-unlocker --target 192.168.1.1 shell --ssh
+
+# One command over SSH with explicit credentials
+./zlt-unlocker shell --ssh --user admin --password admin --command "nv get sim_plmn"
+
+# Other firmware variants ship their own profiles
+./zlt-unlocker --profile ./profiles/zlt_m910w_1.13.6_mtn.json scan
+./zlt-unlocker --profile ./profiles/zlt_s20_1.02.7_org.json status
+```
+
+The MTN (`S20_1.13.6`) and ORG (`S20_1.02.7`) profiles carry their own
+fingerprint commands, payload sets and unlock parameters, so `unlock` uses the
+correct NVRAM/AT keys for those firmware variants.
+
 ### 3. TR-069 ACS simulator
 
 ```bash
@@ -293,9 +313,15 @@ used by the reference project.
 # Real push with local config file; requires confirmation
 ./zlt-unlocker tr069-exploit --dry-run=false --yes \
     --rpc download --serve-file ./unlock-config.bin
+
+# Push the local ACS URL to the router automatically via setTR069Config
+./zlt-unlocker --dry-run=false --yes tr069-exploit --set-acs \
+    --rpc set-params --param InternetGatewayDevice.ManagementServer.URL \
+    --value http://192.168.1.2:7547/acs
 ```
 
-The command prints the exact ACS URL to enter in the router's web UI.
+The command prints the exact ACS URL. You can enter it in the router's web UI,
+or let `--set-acs` push it with the `setTR069Config` goform and restart TR-069.
 
 ### 4. UART / AT commands
 
@@ -392,7 +418,13 @@ Copy `profiles/zlt_s20_1.12.7.json` and pass it with `--profile`. Useful fields:
     "max_requests": 400
   },
   "uart": { "port": "COM3", "baud": 115200 },
-  "crypto": { "known_keys": [ /* keys found in firmware */ ] }
+  "crypto": { "known_keys": [ /* keys found in firmware */ ] },
+  "unlock": {
+    "backup_path": "/tmp/zlt-unlocker-nv-backup.txt",
+    "save": true,
+    "nv": [ { "key": "tz_lock_plmn_state", "value": "no", "path": "/etc_ro/default/default_parameter_sys" } ],
+    "at": [ { "key": "tz_lock_plmn_state", "value": "no", "path": "" } ]
+  }
 }
 ```
 
@@ -408,7 +440,8 @@ internal/api/        HTTP client, login/CSRF, payload corpus, fuzzer, worker poo
 internal/buildinfo/  Build-time version / commit / date metadata
 internal/crypto/     Container parsing, entropy, key heuristics
 internal/logging/    Logging setup
-internal/profile/    JSON profile loading and defaults
+internal/profile/    JSON profile loading and defaults (incl. variant unlock keys)
+internal/sshclient/  SSH transport for the root shell
 internal/telnet/     Telnet client
 internal/tr069/      ACS server, SOAP envelopes, RPC builders
 internal/uart/       Serial connection and AT engine
@@ -423,6 +456,7 @@ js_dump/             Reference firmware JS (documentation only, not compiled in)
 .goreleaser.yaml     Release archive matrix
 Makefile             Build, test, coverage and release targets
 SECURITY.md          Vulnerability reporting policy
+WARNING.md           Educational-use and upstream compatibility warning
 CONTRIBUTING.md      Development and pull-request guidelines
 CHANGELOG.md         Release history
 CODE_OF_CONDUCT.md   Community standards

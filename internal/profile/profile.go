@@ -112,6 +112,23 @@ type Crypto struct {
 	KeyLengths  []int    `json:"key_lengths"`
 }
 
+// UnlockParam is one NVRAM or AT parameter change used to remove a SIM/network
+// lock. Path names the default-parameter file to patch for persistence.
+type UnlockParam struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+	Path  string `json:"path"`
+}
+
+// Unlock holds variant-specific lock-removal data. It is profile-driven so the
+// same binary can handle the SLT/Dialog, MTN and ORG firmware variants.
+type Unlock struct {
+	BackupPath string        `json:"backup_path"`
+	NV         []UnlockParam `json:"nv"`
+	AT         []UnlockParam `json:"at"`
+	Save       bool          `json:"save"`
+}
+
 // Profile is the complete device profile.
 type Profile struct {
 	Name        string      `json:"name"`
@@ -123,6 +140,7 @@ type Profile struct {
 	Fuzz        Fuzz        `json:"fuzz"`
 	UART        UART        `json:"uart"`
 	Crypto      Crypto      `json:"crypto"`
+	Unlock      Unlock      `json:"unlock"`
 }
 
 // Load reads and validates a JSON profile from disk.
@@ -207,6 +225,9 @@ func (p *Profile) applyDefaults() {
 	}
 	if p.UART.Parity == "" {
 		p.UART.Parity = "N"
+	}
+	if p.Unlock.BackupPath == "" {
+		p.Unlock.BackupPath = "/tmp/zlt-unlocker-nv-backup.txt"
 	}
 }
 

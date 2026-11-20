@@ -43,6 +43,20 @@ func BuiltinPayloads() []profile.Payload {
 		{ID: "RESTORE_FACTORY_SETTINGS", Method: "POST", Description: "reported: factory reset — DESTRUCTIVE", Args: map[string]string{
 			"isTest": "false",
 		}},
+		{ID: "SET_DEVICE_MODE", Method: "POST", Description: "reported: device mode / debug toggle", Args: map[string]string{
+			"isTest": "false", "debug_enable": "1",
+		}},
+		{ID: "TZ_SET_USB_STATUS", Method: "POST", Description: "reported: enable USB port and USB download", Args: map[string]string{
+			"isTest": "false", "usbPortEnable": "1", "usbDownloadEnable": "1",
+		}},
+		{ID: "DMZ_SETTING", Method: "POST", Description: "reported: DMZ configuration", Args: map[string]string{
+			"isTest": "false",
+		}},
+		{ID: "setTR069Config", Method: "POST", Description: "reported: point TR-069 at a local ACS", Args: map[string]string{
+			"isTest": "false", "configurationMode": "0", "acsUrl": "",
+			"periodicInformInterval": "30", "tr069Enable": "1", "periodicInform": "1",
+			"acsAuth": "0", "cpeAuth": "0", "restartTr069": "1",
+		}},
 
 		// ---- Verified from service.js ----
 		{ID: "TZ_UNLOCK_PLMN", Method: "POST", Description: "verified: getUnlockPlmn() trigger", Args: map[string]string{

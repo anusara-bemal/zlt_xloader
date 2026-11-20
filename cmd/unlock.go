@@ -16,15 +16,39 @@ var (
 	unlockNoSave bool
 )
 
+// defaultUnlockParams keeps older profiles (without an "unlock" section)
+// working exactly as before this profile-driven refactor.
+var defaultUnlockParams = []profile.UnlockParam{
+	{Key: "tz_lock_plmn_state", Value: "no", Path: "/etc_ro/default/default_parameter_sys"},
+	{Key: "tz_lock_plmn_list", Value: "", Path: "/etc_ro/default/default_parameter_sys"},
+	{Key: "tz_lock_band_state", Value: "no", Path: "/etc_ro/default/default_parameter_sys"},
+	{Key: "tz_lock_3G_band_state", Value: "no", Path: "/etc_ro/default/default_parameter_sys"},
+	{Key: "tz_lock_imsi_state", Value: "0"},
+	{Key: "use_lock_net", Value: "no"},
+	{Key: "tz_lock_sim", Value: "0"},
+}
+
+func runUnlockCommand(name, command string) {
+	r := app.API.Try(profile.Payload{
+		ID: "REMOVE_WHITE_SITE", Method: "POST",
+		Args: map[string]string{"isTest": "false", "ids": "1 $(" + command + ")"},
+	})
+	if r.Err != nil {
+		log.WithError(r.Err).Warnf("[unlock] %s: request failed", name)
+		return
+	}
+	log.Infof("[unlock] %-20s %s", name, strings.TrimSpace(r.Body))
+}
+
 var unlockCmd = &cobra.Command{
 	Use:   "unlock",
-	Short: "Remove the SLT/Dialog PLMN and band locks using the root shell",
-	Long: `Uses the REMOVE_WHITE_SITE command injection to run nv/sed commands
-as root on the router. This clears the PLMN lock list, band locks and IMSI
-lock so the device accepts SIMs from any network.
+	Short: "Remove the SIM/network locks using the root shell",
+	Long: `Uses the REMOVE_WHITE_SITE command injection to run nv/at/sed commands
+as root on the router. The exact parameters come from the active device profile,
+so the SLT/Dialog, MTN and ORG firmware variants all use the same binary.
 
-Changes are written to NVRAM (nv save) and to the default parameter files so
-they survive a factory reset. Nothing is sent unless --dry-run=false.`,
+Changes are written to NVRAM and to the default parameter files so they survive
+a factory reset. Nothing is sent unless --dry-run=false.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if app.DryRun {
 			log.Warn("DRY-RUN: no unlock commands will be sent to the router")
@@ -37,79 +61,44 @@ they survive a factory reset. Nothing is sent unless --dry-run=false.`,
 		}
 		log.Infof("authenticated; CSRFToken=%q", app.API.Token())
 
-		commands := []struct {
-			name string
-			cmd  string
-		}{
-			{"backup", "nv show > /tmp/zlt-unlocker-nv-backup.txt"},
-			{"plmn state", "nv set tz_lock_plmn_state=no"},
-			{"plmn list", "nv set tz_lock_plmn_list="},
-			{"band state", "nv set tz_lock_band_state=no"},
-			{"3g band state", "nv set tz_lock_3G_band_state=no"},
-			{"imsi state", "nv set tz_lock_imsi_state=0"},
-			{"lock net", "nv set use_lock_net=no"},
-			{"sim lock", "nv set tz_lock_sim=0"},
+		params := app.Profile.Unlock.NV
+		if len(params) == 0 {
+			params = defaultUnlockParams
 		}
 
-		for _, c := range commands {
-			payload := profile.Payload{
-				ID:     "REMOVE_WHITE_SITE",
-				Method: "POST",
-				Args: map[string]string{
-					"isTest": "false",
-					"ids":    "1 $(" + c.cmd + ")",
-				},
-			}
-			r := app.API.Try(payload)
-			if r.Err != nil {
-				log.WithError(r.Err).Warnf("[unlock] %s: request failed", c.name)
-			} else {
-				log.Infof("[unlock] %-16s %s", c.name, strings.TrimSpace(r.Body))
-			}
+		runUnlockCommand("backup", "nv show > "+app.Profile.Unlock.BackupPath)
+		for _, u := range params {
+			runUnlockCommand(u.Key, fmt.Sprintf("nv set %s=%s", u.Key, u.Value))
+		}
+		for _, u := range app.Profile.Unlock.AT {
+			at := fmt.Sprintf("AT+ZNVSET='%s','%s'", u.Key, u.Value)
+			runUnlockCommand("at:"+u.Key, fmt.Sprintf("at_cmd \"%s\"", at))
 		}
 
-		if !unlockNoSave {
-			r := app.API.Try(profile.Payload{
-				ID: "REMOVE_WHITE_SITE", Method: "POST",
-				Args: map[string]string{
-					"isTest": "false",
-					"ids":    "1 $(nv save)",
-				},
-			})
-			if r.Err != nil {
-				log.WithError(r.Err).Warn("[unlock] nv save failed")
-			} else {
-				log.Infof("[unlock] nv save: %s", strings.TrimSpace(r.Body))
-			}
+		save := app.Profile.Unlock.Save || len(app.Profile.Unlock.NV) == 0
+		if unlockNoSave {
+			save = false
+		}
+		if save {
+			runUnlockCommand("nv save", "nv save")
 		}
 
 		// Persist the change in the default files so it survives a factory reset.
-		defaults := []string{
-			"tz_lock_plmn_state=no",
-			"tz_lock_plmn_list=",
-			"tz_lock_band_state=no",
-			"tz_lock_3G_band_state=no",
+		for _, u := range params {
+			if u.Path == "" {
+				continue
+			}
+			runUnlockCommand("default:"+u.Key,
+				fmt.Sprintf("sed -i 's|^%s=.*|%s=%s|' %s", u.Key, u.Key, u.Value, u.Path))
 		}
-		for _, line := range defaults {
-			key := strings.SplitN(line, "=", 2)[0]
-			cmdStr := fmt.Sprintf("sed -i 's|^%s=.*|%s|' /etc_ro/default/default_parameter_sys", key, line)
-			app.API.Try(profile.Payload{
-				ID: "REMOVE_WHITE_SITE", Method: "POST",
-				Args: map[string]string{"isTest": "false", "ids": "1 $(" + cmdStr + ")"},
-			})
-		}
-		log.Info("[unlock] default parameter files updated")
 
 		if unlockReboot {
 			log.Warn("[unlock] rebooting router; telnet will need to be re-enabled with 'zlt-unlocker telnet'")
-			app.API.Try(profile.Payload{
-				ID: "REMOVE_WHITE_SITE", Method: "POST",
-				Args: map[string]string{"isTest": "false", "ids": "1 $(reboot)"},
-			})
+			runUnlockCommand("reboot", "reboot")
 		}
 
 		fmt.Println()
-		fmt.Println("NVRAM backup saved on the router at /tmp/zlt-unlocker-nv-backup.txt")
+		fmt.Printf("NVRAM backup saved on the router at %s\n", app.Profile.Unlock.BackupPath)
 		fmt.Println("Verify with: nv get tz_lock_plmn_state   (expect 'no')")
 		return nil
 	},

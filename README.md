@@ -1,24 +1,61 @@
-# zlt-unlocker
+<div align="center">
 
-[![CI](https://github.com/anusara-bemal/zlt_xloader/actions/workflows/ci.yml/badge.svg)](https://github.com/anusara-bemal/zlt_xloader/actions/workflows/ci.yml)
-[![Release](https://github.com/anusara-bemal/zlt_xloader/actions/workflows/release.yml/badge.svg)](https://github.com/anusara-bemal/zlt_xloader/actions/workflows/release.yml)
-[![Go](https://img.shields.io/badge/Go-1.22%2B-00ADD8?logo=go)](https://go.dev/)
-[![license](https://img.shields.io/badge/license-All%20rights%20reserved-red.svg)](LICENSE)
+<img src="docs/assets/logo.png" alt="zlt-unlocker logo" width="92" />
+
+<h1>zlt-unlocker</h1>
+
+<p>
+  <strong>A professional security-research &amp; device-ownership toolkit for the Tozed ZLT S20 4G router.</strong><br />
+  Firmware fingerprinting, root-shell access, TR-069 role reversal and variant-aware unlocking — from one cross-platform Go binary.
+</p>
+
+<p>
+  <a href="https://github.com/anusara-bemal/zlt_xloader/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/anusara-bemal/zlt_xloader/actions/workflows/ci.yml/badge.svg" /></a>
+  <a href="https://github.com/anusara-bemal/zlt_xloader/actions/workflows/release.yml"><img alt="Release" src="https://github.com/anusara-bemal/zlt_xloader/actions/workflows/release.yml/badge.svg" /></a>
+  <img alt="Go 1.22+" src="https://img.shields.io/badge/Go-1.22%2B-00ADD8?logo=go" />
+  <img alt="License" src="https://img.shields.io/badge/license-All%20rights%20reserved-red.svg" />
+  <img alt="Platforms" src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-informational" />
+  <img alt="Status" src="https://img.shields.io/badge/status-active-brightgreen" />
+</p>
+
+<p>
+  <img src="docs/assets/cli-preview.png" alt="zlt-unlocker CLI preview" width="430" />
+  <img src="docs/assets/hero-router.png" alt="Tozed ZLT S20 router" width="380" />
+</p>
+
+<p><em>Educational use only — do not misuse. Only on hardware you own.</em></p>
+
+</div>
 
 > [!WARNING]
 > **EDUCATIONAL PURPOSES ONLY — DO NOT MISUSE.** This project was created for learning and lawful security research on devices you own or are explicitly authorised to test. Do not use it for unauthorised access to, or modification of, any device or network you do not own. Misuse is prohibited and may be illegal.
 
 Also read [WARNING.md](WARNING.md) for the upstream firmware-compatibility warning.
 
-A security-research and device-ownership toolkit for the **Tozed ZLT S20 4G router** (firmware `S20_1.12.7`, Dialog / SLT-Mobitel variants).
+## Overview
+
+A security-research and device-ownership toolkit for the **Tozed ZLT S20 4G router** (firmware `S20_1.12.7`, Dialog / SLT-Mobitel variants), with additional profiles for the MTN and ORG firmware variants.
 
 Standard ZTE tooling (`zteOnu`, `factorymode_crack`, …) does not work on this device because Tozed uses a different web API. This tool targets the Tozed-specific endpoints directly.
 
 **Repository:** `github.com/anusara-bemal/zlt_xloader` — the Go module path matches this repository. The shipped binary is named `zlt-unlocker`.
 
+## Contents
+
+- [Disclaimer — read before use](#disclaimer--read-before-use)
+- [Project status](#project-status)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [How it works](#how-it-works)
+- [Tuning the profile](#tuning-the-profile)
+- [Project layout](#project-layout)
+- [Contributing](#contributing)
+- [License and copyright](#license-and-copyright)
+
 ---
 
-## ⚠️ Disclaimer — read before use
+## Disclaimer — read before use
 
 > **This software is provided for lawful security research and for devices you personally own and operate.**
 >
@@ -450,6 +487,7 @@ pkg/out/             Output formatting
 pkg/safety/          Interactive confirmation guard
 profiles/            Device profiles
 js_dump/             Reference firmware JS (documentation only, not compiled in)
+docs/assets/         README artwork + dependency-free PNG generator
 
 .github/workflows/   CI and tag-triggered release automation
 .github/ISSUE_TEMPLATE/  Issue forms and contribution links

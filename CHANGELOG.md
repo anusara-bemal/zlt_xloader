@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `tr069-exploit --set-acs` pushes the local ACS URL via `setTR069Config`.
 - Additional goformIds: `SET_DEVICE_MODE`, `TZ_SET_USB_STATUS`, `DMZ_SETTING`,
   `setTR069Config` and `REBOOT_DEVICE`.
+- Creative README hero layout with locally generated logo, device render and
+  CLI preview images (`docs/assets/`, rebuild with `generate_assets.py`).
 
 ### Changed
 

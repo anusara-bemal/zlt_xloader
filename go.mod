@@ -3,7 +3,7 @@ module github.com/anusara-bemal/zlt_xloader
 go 1.26.0
 
 require (
-	github.com/sirupsen/logrus v1.9.3
+	github.com/sirupsen/logrus v1.10.2
 	github.com/spf13/cobra v1.10.2
 	go.bug.st/serial v1.8.0
 	golang.org/x/crypto v0.59.0

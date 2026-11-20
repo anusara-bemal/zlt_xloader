@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/anusara-bemal/zlt-unlocker/internal/profile"
+	"github.com/anusara-bemal/zlt_xloader/internal/profile"
 )
 
 // Info is the detected device identity.

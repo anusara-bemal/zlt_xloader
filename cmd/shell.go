@@ -8,9 +8,9 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"github.com/anusara-bemal/zlt-unlocker/internal/profile"
-	"github.com/anusara-bemal/zlt-unlocker/internal/telnet"
-	"github.com/anusara-bemal/zlt-unlocker/pkg/netutil"
+	"github.com/anusara-bemal/zlt_xloader/internal/profile"
+	"github.com/anusara-bemal/zlt_xloader/internal/telnet"
+	"github.com/anusara-bemal/zlt_xloader/pkg/netutil"
 )
 
 var (

@@ -4,7 +4,7 @@
 // It is intended strictly for devices you own and operate. See README.md.
 package main
 
-import "github.com/anusara-bemal/zlt-unlocker/cmd"
+import "github.com/anusara-bemal/zlt_xloader/cmd"
 
 func main() {
 	cmd.Execute()

@@ -8,7 +8,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/anusara-bemal/zlt-unlocker/internal/profile"
+	"github.com/anusara-bemal/zlt_xloader/internal/profile"
 )
 
 // Result is the outcome of one payload attempt.

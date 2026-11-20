@@ -8,8 +8,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/anusara-bemal/zlt-unlocker/internal/uart"
-	"github.com/anusara-bemal/zlt-unlocker/pkg/safety"
+	"github.com/anusara-bemal/zlt_xloader/internal/uart"
+	"github.com/anusara-bemal/zlt_xloader/pkg/safety"
 )
 
 var (

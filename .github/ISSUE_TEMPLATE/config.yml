@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/anusara-bemal/zlt_xloader/security/policies
+    about: Please disclose vulnerabilities privately via GitHub Security, not in a public issue.
+  - name: Documentation and usage
+    url: https://github.com/anusara-bemal/zlt_xloader#readme
+    about: Check the README before opening an issue.

@@ -1,4 +1,4 @@
-module github.com/anusara-bemal/zlt-unlocker
+module github.com/anusara-bemal/zlt_xloader
 
 go 1.22
 

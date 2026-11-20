@@ -1,6 +1,6 @@
 package api
 
-import "github.com/anusara-bemal/zlt-unlocker/internal/profile"
+import "github.com/anusara-bemal/zlt_xloader/internal/profile"
 
 // BuiltinPayloads is the S20_1.12.7 goform corpus. Entries are split into two
 // groups:

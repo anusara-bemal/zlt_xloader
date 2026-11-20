@@ -1,1 +1,0 @@
-define(["config/menu","language","logout","status/statusBar","router","index_status"],function(i,t,n,u,e,a){return{init:function(){i.init(),t.init(),e.init(),n.init(),u.init()}}});

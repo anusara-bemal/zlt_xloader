@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"github.com/anusara-bemal/zlt-unlocker/pkg/out"
+	"github.com/anusara-bemal/zlt_xloader/pkg/out"
 )
 
 var statusCmd = &cobra.Command{

@@ -1,0 +1,51 @@
+name: Feature request
+description: Suggest a capability or a device profile
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Feature requests are welcome, especially new device profiles and
+        corrections derived from packet captures. Do not include captured
+        configuration data containing personal identifiers.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What are you trying to do that the tool cannot do today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - API / payloads
+        - Telnet / shell
+        - TR-069
+        - UART / AT
+        - Crypto / config
+        - Device profile
+        - Build / CI / docs
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Supporting evidence
+      description: Endpoint names, goformIds or observed responses. Redact personal data.
+  - type: checkboxes
+    id: ownership
+    attributes:
+      label: Ownership
+      options:
+        - label: Any device involved is one I own or am authorised to test.
+          required: true

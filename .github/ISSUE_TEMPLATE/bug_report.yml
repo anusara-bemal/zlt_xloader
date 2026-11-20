@@ -1,0 +1,70 @@
+name: Bug report
+description: Report a reproducible problem with zlt-unlocker
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please confirm the device is one you own or are
+        explicitly authorised to test. Never paste real IMEIs, serial numbers,
+        phone numbers, or captured configuration data into a public issue.
+  - type: checkboxes
+    id: ownership
+    attributes:
+      label: Ownership
+      options:
+        - label: I own, or am explicitly authorised to test, the device involved.
+          required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `zlt-unlocker version`
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: OS / architecture
+      placeholder: Windows 11 amd64, Ubuntu 24.04 arm64, macOS 14 arm64...
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device and firmware
+      placeholder: Tozed ZLT S20, S20_1.12.7
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include the exact command. Redact all personal identifiers.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant output
+      render: shell
+  - type: checkboxes
+    id: dryrun
+    attributes:
+      label: Safety
+      options:
+        - label: I reproduced this in dry-run mode, or on a device I can afford to lose.
+          required: false

@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/anusara-bemal/zlt-unlocker/internal/profile"
+	"github.com/anusara-bemal/zlt_xloader/internal/profile"
 )
 
 func TestLoginFlow(t *testing.T) {

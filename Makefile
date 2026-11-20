@@ -1,10 +1,15 @@
 BINARY     := zlt-unlocker
-PKG        := github.com/anusara-bemal/zlt-unlocker
+PKG        := github.com/anusara-bemal/zlt_xloader
 VERSION    ?= dev
-LDFLAGS    := -s -w -X $(PKG)/cmd.version=$(VERSION)
+COMMIT     ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo none)
+DATE       ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
+LDFLAGS    := -s -w \
+               -X $(PKG)/internal/buildinfo.Version=$(VERSION) \
+               -X $(PKG)/internal/buildinfo.Commit=$(COMMIT) \
+               -X $(PKG)/internal/buildinfo.Date=$(DATE)
 DIST       := dist
 
-.PHONY: all build build-all build-windows build-linux build-macos test lint fmt vet clean install help
+.PHONY: all build build-all build-windows build-linux build-macos test cover vet fmt fmt-check check ci release snapshot install clean help
 
 all: build
 
@@ -31,22 +36,46 @@ build-macos:
 	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -trimpath -ldflags "$(LDFLAGS)" -o $(DIST)/macos/$(BINARY)-amd64 .
 	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -trimpath -ldflags "$(LDFLAGS)" -o $(DIST)/macos/$(BINARY)-arm64 .
 
+## Run the full test suite.
 test:
 	go test ./...
 
+## Run tests with a coverage report.
+cover:
+	go test -coverprofile=coverage.txt ./...
+	go tool cover -func=coverage.txt
+
+## Run go vet across all packages.
 vet:
 	go vet ./...
 
-lint: vet
-
+## Format all Go source files.
 fmt:
 	gofmt -w .
+
+## Fail if any Go file is not gofmt-clean.
+fmt-check:
+	@test -z "$$(gofmt -l .)" || (echo "Run 'make fmt'"; gofmt -l .; exit 1)
+
+## Local pre-push gate: formatting, vet and tests.
+check: fmt-check vet test
+
+## Everything CI runs, including the full cross-compile matrix.
+ci: check build-all
+
+## Build and publish a tagged release with GoReleaser (requires a git tag).
+release:
+	goreleaser release --clean
+
+## Build release artifacts locally without publishing them.
+snapshot:
+	goreleaser release --snapshot --clean
 
 install:
 	go install -trimpath -ldflags "$(LDFLAGS)" .
 
 clean:
-	rm -rf $(DIST) $(BINARY)
+	rm -rf $(DIST) $(BINARY) $(BINARY).exe coverage.txt
 
 help:
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-18s %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-16s %s\n", $$1, $$2}'

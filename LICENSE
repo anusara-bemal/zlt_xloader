@@ -1,21 +1,40 @@
-MIT License
+Copyright (c) 2026 anusara-bemal.
 
-Copyright (c) 2026 anusara-bemal
+All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+EDUCATIONAL USE ONLY - DO NOT MISUSE. This software was created strictly for
+learning and lawful security research. Any misuse - including unauthorised
+access to, or modification of, any device or network you do not own or are not
+explicitly authorised in writing to test - is strictly prohibited.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+PROPRIETARY SOFTWARE — NO LICENSE IS GRANTED
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+The software in this repository, including its source code, documentation,
+configuration profiles, build scripts and accompanying materials (collectively,
+the "Software"), is the sole and exclusive property of the copyright holder.
+
+No person or entity is granted any right, title, interest, license, or
+permission to use, copy, modify, adapt, merge, publish, distribute, sublicense,
+sell, reverse engineer, decompile, or create derivative works of the Software,
+in whole or in part, whether by implication, estoppel or otherwise, except as
+may be expressly granted in a separate written agreement signed by the
+copyright holder.
+
+Viewing or downloading the Software from a public source-control repository
+does not constitute a grant of any license.
+
+The Software is provided "AS IS", without warranty of any kind, express or
+implied, including but not limited to the warranties of merchantability,
+fitness for a particular purpose and non-infringement. In no event shall the
+copyright holder be liable for any claim, damages or other liability, whether
+in an action of contract, tort or otherwise, arising from, out of or in
+connection with the Software or the use or other dealings in the Software.
+
+The Software is intended solely for lawful security research on, and the
+administration of, hardware that you personally own or are explicitly
+authorised in writing to test. See the disclaimer in README.md and the policy
+in SECURITY.md. Unauthorised access to, or modification of, devices or networks
+you do not own is prohibited and may be illegal in your jurisdiction.
+
+For permission requests, contact the copyright holder through the contact
+methods published on the project's GitHub profile.

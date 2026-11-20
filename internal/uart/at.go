@@ -7,7 +7,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/anusara-bemal/zlt-unlocker/internal/profile"
+	"github.com/anusara-bemal/zlt_xloader/internal/profile"
 )
 
 // Transport is the minimal serial interface the AT engine needs. It allows

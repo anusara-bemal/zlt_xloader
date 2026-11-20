@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/anusara-bemal/zlt-unlocker/internal/profile"
+	"github.com/anusara-bemal/zlt_xloader/internal/profile"
 )
 
 // dryRunResult is returned by mutating calls when dry-run is enabled. It is

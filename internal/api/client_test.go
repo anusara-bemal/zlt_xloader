@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/anusara-bemal/zlt-unlocker/internal/profile"
+	"github.com/anusara-bemal/zlt_xloader/internal/profile"
 )
 
 func TestIsFailure(t *testing.T) {

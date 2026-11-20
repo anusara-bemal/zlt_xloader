@@ -9,12 +9,17 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"github.com/anusara-bemal/zlt-unlocker/internal/api"
-	"github.com/anusara-bemal/zlt-unlocker/internal/logging"
-	"github.com/anusara-bemal/zlt-unlocker/internal/profile"
+	"github.com/anusara-bemal/zlt_xloader/internal/api"
+	"github.com/anusara-bemal/zlt_xloader/internal/logging"
+	"github.com/anusara-bemal/zlt_xloader/internal/profile"
 )
 
 const rootLong = `zlt-unlocker - security research toolkit for the Tozed ZLT S20 4G router.
+
+EDUCATIONAL USE ONLY - DO NOT MISUSE:
+  This project was created strictly for learning and lawful security research.
+  Do not use it to gain unauthorised access to, or to modify, any device or
+  network you do not own or are not explicitly authorised in writing to test.
 
 LEGAL / SAFETY NOTICE:
   This tool is intended ONLY for devices that you personally own and operate.

@@ -1,11 +1,18 @@
 # zlt-unlocker
 
-[![build](https://github.com/anusara-bemal/zlt-unlocker/actions/workflows/build.yml/badge.svg)](https://github.com/anusara-bemal/zlt-unlocker/actions/workflows/build.yml)
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/anusara-bemal/zlt_xloader/actions/workflows/ci.yml/badge.svg)](https://github.com/anusara-bemal/zlt_xloader/actions/workflows/ci.yml)
+[![Release](https://github.com/anusara-bemal/zlt_xloader/actions/workflows/release.yml/badge.svg)](https://github.com/anusara-bemal/zlt_xloader/actions/workflows/release.yml)
+[![Go](https://img.shields.io/badge/Go-1.22%2B-00ADD8?logo=go)](https://go.dev/)
+[![license](https://img.shields.io/badge/license-All%20rights%20reserved-red.svg)](LICENSE)
+
+> [!WARNING]
+> **EDUCATIONAL PURPOSES ONLY — DO NOT MISUSE.** This project was created for learning and lawful security research on devices you own or are explicitly authorised to test. Do not use it for unauthorised access to, or modification of, any device or network you do not own. Misuse is prohibited and may be illegal.
 
 A security-research and device-ownership toolkit for the **Tozed ZLT S20 4G router** (firmware `S20_1.12.7`, Dialog / SLT-Mobitel variants).
 
 Standard ZTE tooling (`zteOnu`, `factorymode_crack`, …) does not work on this device because Tozed uses a different web API. This tool targets the Tozed-specific endpoints directly.
+
+**Repository:** `github.com/anusara-bemal/zlt_xloader` — the Go module path matches this repository. The shipped binary is named `zlt-unlocker`.
 
 ---
 
@@ -27,6 +34,18 @@ Standard ZTE tooling (`zteOnu`, `factorymode_crack`, …) does not work on this 
 - Every mutating action runs in **dry-run mode by default** (`--dry-run=true`). Nothing is written to the device unless you explicitly pass `--dry-run=false`.
 - Destructive TR-069 RPCs and UART writes additionally require interactive confirmation, or `--yes`.
 - Endpoint names, `goformId` values, token salts and AT commands live in an editable JSON **profile**, so you can correct them from a packet capture without recompiling.
+
+## Project status
+
+The toolkit is functional and tested: `go test ./...`, `go vet ./...`, `gofmt`
+and the full cross-compile matrix all pass. Behaviour documented as "verified"
+was confirmed against the firmware's `service.js`; entries labelled "reported"
+in the profile come from black-box testing and may not work on every firmware
+build. Contributions and profile corrections are welcome — see
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
+Please report security issues privately via [SECURITY.md](SECURITY.md), not in
+a public issue.
 
 ---
 
@@ -58,11 +77,18 @@ Global flags: `--target`, `--timeout`, `--profile`, `--dry-run`, `--verbose`, `-
 
 ## Installation
 
+### From a release
+
+Pre-built, checksummed archives for Linux, Windows and macOS are published on
+the [Releases page](https://github.com/anusara-bemal/zlt_xloader/releases).
+Download the archive for your platform, verify it against the published
+`checksums.txt`, and run the `zlt-unlocker` binary inside it.
+
 ### From source
 
 ```bash
-git clone https://github.com/anusara-bemal/zlt-unlocker.git
-cd zlt-unlocker
+git clone https://github.com/anusara-bemal/zlt_xloader.git
+cd zlt_xloader
 go build -o zlt-unlocker .
 ```
 
@@ -377,33 +403,49 @@ Capture a real login/session with a MITM proxy or browser devtools and mirror th
 ## Project layout
 
 ```
-cmd/            Cobra commands
-internal/api/   HTTP client, login/CSRF, payload corpus, fuzzer, worker pool, fingerprinting
-internal/tr069/ ACS server, SOAP envelopes, RPC builders
-internal/uart/  Serial connection and AT engine
-internal/crypto/Container parsing, entropy, key heuristics
-internal/profile/JSON profile loading and defaults
-pkg/netutil/    Port scanner and local-IP detection
-pkg/out/        Output formatting
-pkg/safety/     Interactive confirmation guard
-profiles/       Device profiles
+cmd/                 Cobra commands
+internal/api/        HTTP client, login/CSRF, payload corpus, fuzzer, worker pool, fingerprinting
+internal/buildinfo/  Build-time version / commit / date metadata
+internal/crypto/     Container parsing, entropy, key heuristics
+internal/logging/    Logging setup
+internal/profile/    JSON profile loading and defaults
+internal/telnet/     Telnet client
+internal/tr069/      ACS server, SOAP envelopes, RPC builders
+internal/uart/       Serial connection and AT engine
+pkg/netutil/         Port scanner and local-IP detection
+pkg/out/             Output formatting
+pkg/safety/          Interactive confirmation guard
+profiles/            Device profiles
+js_dump/             Reference firmware JS (documentation only, not compiled in)
+
+.github/workflows/   CI and tag-triggered release automation
+.github/ISSUE_TEMPLATE/  Issue forms and contribution links
+.goreleaser.yaml     Release archive matrix
+Makefile             Build, test, coverage and release targets
+SECURITY.md          Vulnerability reporting policy
+CONTRIBUTING.md      Development and pull-request guidelines
+CHANGELOG.md         Release history
+CODE_OF_CONDUCT.md   Community standards
+NOTICE               Attribution and third-party dependency notices
 ```
 
 ---
 
 ## Contributing
 
-Contributions are welcome. Please:
-
-- Keep device-specific constants in profiles, not in Go source.
-- Add tests for new parsers/decryption routines.
-- Never submit captured configuration data containing personal identifiers.
-- Run `go vet ./...` and `go test ./...` before opening a PR.
+Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the
+development workflow and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community
+standards. In short: keep device constants in profiles, add tests for new
+parsers, never submit captured personal data, and run `make check` before
+opening a PR.
 
 ---
 
-## License
+## License and copyright
 
-MIT — see [LICENSE](LICENSE).
+Copyright (c) 2026 anusara-bemal. **All rights reserved.** This is a proprietary
+project; no license to use, copy, modify or distribute the source is granted
+except by a separate written agreement. See [LICENSE](LICENSE) and
+[NOTICE](NOTICE) for full terms and third-party attribution.
 
-Use responsibly. Only on hardware you own.
+Use responsibly. Only on hardware you own or are authorised to test.

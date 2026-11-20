@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - "v*"
+      - "[0-9]*"
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -25,6 +27,7 @@ jobs:
         with:
           distribution: goreleaser
           version: "~> v2"
-          args: release --clean
+          # Manual runs are snapshots so they cannot publish a bogus release.
+          args: release --clean ${{ github.event_name == 'workflow_dispatch' && '--snapshot' || '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,10 +1,12 @@
-version: 2
+add version: 2
 
 project_name: zlt_xloader
 
 before:
   hooks:
-    - go mod tidy
+    # Download only. Running `go mod tidy` here rewrites line endings in
+    # go.mod/go.sum and makes the checkout dirty, which aborts GoReleaser.
+    - go mod download
 
 builds:
   - id: zlt_xloader

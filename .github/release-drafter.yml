@@ -1,0 +1,36 @@
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+
+categories:
+  - title: "Features"
+    labels: [feature, enhancement]
+  - title: "Fixes"
+    labels: [fix, bug]
+  - title: "Security"
+    labels: [security]
+  - title: "Dependencies"
+    labels: [dependencies]
+  - title: "Documentation"
+    labels: [docs, documentation]
+  - title: "Maintenance"
+    labels: [ci, chore, refactor]
+
+change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
+change-title-escapes: '\<*_&'
+
+version-resolver:
+  major:
+    labels: [major, breaking]
+  minor:
+    labels: [minor, feature, enhancement]
+  patch:
+    labels: [patch, fix, bug, dependencies, security, docs, ci, chore]
+  default: patch
+
+template: |
+  ## Changes
+
+  $CHANGES
+
+  ---
+  Educational use only. For devices you own or are authorised to test.

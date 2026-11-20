@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configure Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       # The committed HTML carries the default canonical/origin. When a final
       # domain is configured, rewrite it in the published copy only.

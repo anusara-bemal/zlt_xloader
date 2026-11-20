@@ -19,7 +19,6 @@
 </p>
 
 <p>
-  <img src="docs/assets/cli-preview.png" alt="zlt-unlocker CLI preview" width="430" />
   <img src="docs/assets/hero-router.png" alt="Tozed ZLT S20 router" width="380" />
 </p>
 
